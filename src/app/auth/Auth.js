@@ -7,6 +7,7 @@ import * as Actions from 'app/store/actions';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import user from './store/reducers/user.reducer';
 
 class Auth extends Component {
 	state = {
@@ -103,35 +104,54 @@ class Auth extends Component {
 			firebaseService.init(success => {
 				if (!success) {
 					console.log("Firebase failed")
-					reject("Sighhh");
+					// reject("Sighhh");
+					resolve()
 				}
-				else{console.log("Firebase service working")
+				else{
+					console.log("Firebase service working")
 						// resolve("Yayy")
 			}
 				
 			});
 
+
+			firebaseService.getRedirectCode()
+
 			firebaseService.onAuthStateChanged(authUser => {
 				if (authUser) {
 					this.props.showMessage({ message: 'Logging in with Firebase' });
-
+					console.log("auth exists")
+					console.log(authUser)
+					// firebaseService.addAuthUserData(authUser)
+					
+					console.log("line")
 					/**
 					 * Retrieve user data from Firebase
 					 */
-					firebaseService.getUserData(authUser.uid).then(
-						user => {
-							this.props.setUserDataFirebase(user, authUser);
+					let user={}
+					this.props.setUserDataFirebase(authUser,authUser);
+					resolve();
 
-							resolve();
+					this.props.showMessage({ message: 'Logged in with Firebase' });
+					// firebaseService.getUserData(authUser.uid).then(
+					// 	user => {
+					// 		console.log(user)
+					// 		// this.props.setUserDataFirebase(user, authUser);
 
-							this.props.showMessage({ message: 'Logged in with Firebase' });
-						},
-						error => {
-							resolve();
-						}
-					);
-				} else {
+					// 		resolve();
+
+					// 		this.props.showMessage({ message: 'Logged in with Firebase' });
+					// 	},
+					// 	error => {
+					// 		resolve();
+					// 	}
+					// ).catch(err=>{
+					// 	console.log(err)
+					// 	console.log("Couldnt retrieve getUser Data")});
+				}
+				 else {
 					console.log("no auth user")
+					firebaseService.addUserData("rando")
 					resolve();
 				}
 			});

@@ -24,6 +24,7 @@ function ToolbarLayout1(props) {
 	const toolbarTheme = useSelector(({ fuse }) => fuse.settings.toolbarTheme);
 
 	const classes = useStyles(props);
+	console.log(props)
 
 	return (
 		<ThemeProvider theme={toolbarTheme}>
@@ -52,15 +53,15 @@ function ToolbarLayout1(props) {
 
 						<div className={classes.separator} />
 
-						<FuseSearch />
+						{/* <FuseSearch /> */}
 
 						<div className={classes.separator} />
 
-						<LanguageSwitcher />
+						{/* <LanguageSwitcher /> */}
 
 						<div className={classes.separator} />
 
-						<QuickPanelToggleButton />
+						{/* <QuickPanelToggleButton /> */}
 					</div>
 
 					{config.navbar.display && config.navbar.position === 'right' && (

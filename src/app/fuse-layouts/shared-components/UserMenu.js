@@ -10,6 +10,8 @@ import * as authActions from 'app/auth/store/actions';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import firebaseService from 'app/services/firebaseService';
+
 
 function UserMenu(props) {
 	const dispatch = useDispatch();
@@ -24,6 +26,12 @@ function UserMenu(props) {
 	const userMenuClose = () => {
 		setUserMenu(null);
 	};
+
+	const logoutClick = ()=>{
+		console.log("Clicked Logout")
+		firebaseService.signOut()
+	}
+	console.log(props)
 
 	return (
 		<>
@@ -71,6 +79,12 @@ function UserMenu(props) {
 								<Icon>lock</Icon>
 							</ListItemIcon>
 							<ListItemText primary="Login" />
+						</MenuItem>
+						<MenuItem component="button" onClick={logoutClick} to="/register" role="button">
+							<ListItemIcon className="min-w-40">
+								<Icon>Log Out</Icon>
+							</ListItemIcon>
+							<ListItemText primary="Logout" />
 						</MenuItem>
 						<MenuItem component={Link} to="/register" role="button">
 							<ListItemIcon className="min-w-40">

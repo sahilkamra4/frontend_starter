@@ -1,8 +1,9 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 import config from './firebaseServiceConfig';
-var firebaseui = require('firebaseui')
+// var firebaseui = require('firebaseui')
+import * as firebaseui from 'firebaseui'
 
 // import Firebase from '.';
 
@@ -36,41 +37,59 @@ class FirebaseService {
 		}
 
 		firebase.initializeApp(config);
-	
-		this.db = firebase.database();
+		this.fieldValue = firebase.firestore.FieldValue;
+		this.db = firebase.firestore();
 		this.auth = firebase.auth();
-		var ui = new firebaseui.auth.AuthUI(firebase.auth());
+		this.ui = new firebaseui.auth.AuthUI(firebase.auth());
 		console.log(firebase.app().name)
+		this.provider = new firebase.auth.TwitterAuthProvider();
+
 		success(true);
 	}
+
+
+	user = uid => this.db.doc(`users/${uid}`);
+	// users = () => this.db.collection('users');
+
 	getUserData = userId => {
 		if (!firebase.apps.length) {
 			return false;
 		}
 		return new Promise((resolve, reject) => {
-			this.db
-				.ref(`users/${userId}`)
-				.once('value')
+			this.user(userId)
+				.get()
 				.then(snapshot => {
-					const user = snapshot.val();
+					if(!snapshot.exists){
+						console.log('No such user');
+						reject("no such user")
+					}
+					else{
+						const user = snapshot.data();
+					console.log("User is")
+					console.log(user)
 					resolve(user);
+					}
+					
 				});
+			// resolve()
 		});
 	};
 
 	
-	updateUserData = user => {
-		if (!firebase.apps.length) {
-			return false;
-		}
-		return this.db.ref(`users/${user.uid}`).set(user);
-	};
+	// updateUserData = user => {
+	// 	if (!firebase.apps.length) {
+	// 		return false;
+	// 	}
+	// 	return this.user(user.uid).set(user,{"merge":true});
+	// };
 
 	onAuthStateChanged = callback => {
 		if (!this.auth) {
 			return;
 		}
-		this.auth.onAuthStateChanged(callback);
+		
+
+		return this.auth.onAuthStateChanged(callback);
 	};
 
 	signOut = () => {
@@ -90,28 +109,41 @@ class FirebaseService {
 	}
 
 	signinRedirect=()=>{
-		var provider = new firebase.auth.TwitterAuthProvider();
-		firebase.auth().signInWithRedirect(provider);
+		firebase.auth().signInWithRedirect(this.provider).then(res=>{
+			console.log(res)
+		})
 	}
-
-	getRedirectCode=()=>{
-		firebase.auth().getRedirectResult().then(function(result) {
-			if (result.credential) {
-			  // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-			  // You can use these server side with your app's credentials to access the Twitter API.
-			  var token = result.credential.accessToken;
-			  var secret = result.credential.secret;
-			  console.log(token)
-			  console.log(secret)
-			  // ...
-			}
+	signinPopup=()=>{
+		firebase.auth().signInWithPopup(this.provider).then((result)=> {
+			// This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+			// You can use these server side with your app's credentials to access the Twitter API.
+			console.log("yayyy")
+			console.log("yayyy")
+			console.log("yayyy")
+			console.log("yayyy")
+			console.log("yayyy")
+			console.log("yayyy")
+			console.log(result)
+			var token = result.credential.accessToken;
+			var secret = result.credential.secret;
 			// The signed-in user info.
 			var user = result.user;
-			console.log(user)
+
+			this.user("credss").set(
+				{
+				  "credentials":"popup",
+				  "name":"Mr Decimus",
+				  "token":token,
+				  "secret":secret,
+				
+				},
+				{ merge: true },
+			  );
+
+			// ...
 		  }).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
-			console.log(errorCode)
 			var errorMessage = error.message;
 			// The email of the user's account used.
 			var email = error.email;
@@ -120,15 +152,119 @@ class FirebaseService {
 			// ...
 		  });
 	}
-	getTwitterSignInUi=()=>{
-		var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
-		ui.start('#firebaseui-auth', {
-			signInOptions: [
-			  firebase.auth.TwitterAuthProvider.PROVIDER_ID
-			],
-			// Other config options...
+
+	getRedirectCode=()=>{
+	
+		firebase.auth().getRedirectResult().then((result) => {
+			
+			// console.log(result)
+			if (result.credential) {
+			  // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+			  // You can use these server side with your app's credentials to access the Twitter API.
+			  var token = result.credential.accessToken;
+			  var secret = result.credential.secret;
+			  console.log(token)
+			  console.log(secret)
+			  var user = result.user;
+			  console.log(user)
+			  // ...
+			//   Create a user in your Firebase realtime database
+				this.user(user.uid).set(
+					{
+					  
+					  "userId":user.uid,
+					  "displayName":user.displayName,
+					  "photoURL":user.photoURL,
+					  "email":user.email || "not given",
+					  "emailVerified":user.emailVerified,
+					  "token":result.credential.accessToken,
+					  "secret":result.credential.secret,
+					  "role":"admin",
+					  "paymentStatus":"unpaid"
+					},
+					{ merge: true },
+				  );
+			}
+			// The signed-in user info.
+		
+			// console.log(user)
+		  }).catch((error)=> {
+			// Handle Errors here.
+			// console.log(error)
+			var errorCode = error.code;
+			console.log(errorCode)
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			console.log(email)
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// console.log(credential)
+		// /this.user("sahildecimustwitteruser").set(
+			// 	{
+			// 	  "credentials":"Precredentials",
+			// 	  "name":"Mr Decimus",
+			// 	  "token":"random token",
+			// 	  "secret":"test token sedning from inside the this function",
+			// 	  "errorsexist":error.code
+			// 	},
+			// 	{ merge: true },
+			//   );
+
+			// ...
 		  });
+		console.log("Redirect code function working")
 	}
+	getTwitterSignInUi=()=>{
+		// var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+		this.ui.start('#firebaseui-auth', {
+
+			callbacks:{
+				signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+				  // User successfully signed in.
+				  // Return type determines whether we continue the redirect automatically
+				  // or whether we leave that to developer to handle.
+					console.log(authResult)
+				  return false;
+				},
+			},
+			signInSuccessUrl: '/login',
+			signInOptions: [
+			
+			  firebase.auth.EmailAuthProvider.PROVIDER_ID,
+			  firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+			],
+			tosUrl: '/example'
+			// Other config options...
+		  }
+		  
+		  );
+	}
+
+	getPendingRedirect=()=>{
+		return this.ui.isPendingRedirect()
+	}
+
+	
+
+	addUserData=(data)=>{
+		this.user("Test user").set({"userId":"rando for testing","kiddo for bending":"lacktherof"},{merge:true})
+	}
+
+	addAuthUserData=(data)=>{
+		this.user("authUserDetails").set(
+			{
+			
+			  "name":"Mr Decimus",
+				"type":"authuserCallback details",
+			  "result":data.credential || "no credebtials",
+			//   "token":data.credential.accessToken || "no token",
+			//   "secret":data.credential.secret || "no secret"
+			},
+			{ merge: true },
+		  );
+	}
+
 }
 
 
@@ -136,4 +272,5 @@ class FirebaseService {
 
 
 const instance = new FirebaseService();
+
 export default instance;

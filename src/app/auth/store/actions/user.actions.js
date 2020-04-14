@@ -67,19 +67,25 @@ export function createUserSettingsFirebase(authUser) {
 		/**
 		 * Merge with current Settings
 		 */
-		const user = _.merge({}, guestUser, {
+		// console.log(guestUser)
+		const user = _.merge({}, {
 			uid: authUser.uid,
 			from: 'firebase',
 			role: ['admin'],
-			data: {
-				displayName: authUser.displayName,
-				email: authUser.email,
-				settings: { ...fuseDefaultSettings }
+			data:{
+			displayName: authUser.displayName,
+			photoURL: authUser.photoURL,
 			}
+			
+			// data: {
+			// 	displayName: authUser.displayName,
+			// 	email: authUser.email,
+			// 	settings: { ...fuseDefaultSettings }
+			// }
 		});
-		currentUser.updateProfile(user.data);
+		// currentUser.updateProfile(user.data);
 
-		updateUserData(user, dispatch);
+		// updateUserData(user, dispatch);
 		return dispatch(setUserData(user));
 	};
 }
@@ -100,7 +106,7 @@ export function setUserData(user) {
 		/*
         Set User Settings
          */
-		dispatch(FuseActions.setDefaultSettings(user.data.settings));
+		// dispatch(FuseActions.setDefaultSettings(user.data.settings));
 
 		/*
         Set User Data
@@ -204,14 +210,14 @@ function updateUserData(user, dispatch) {
 
 	switch (user.from) {
 		case 'firebase': {
-			firebaseService
-				.updateUserData(user)
-				.then(() => {
-					dispatch(MessageActions.showMessage({ message: 'User data saved to firebase' }));
-				})
-				.catch(error => {
-					dispatch(MessageActions.showMessage({ message: error.message }));
-				});
+			// firebaseService
+				// .updateUserData(user)
+				// .then(() => {
+				// 	dispatch(MessageActions.showMessage({ message: 'User data saved to firebase' }));
+				// })
+				// .catch(error => {
+				// 	dispatch(MessageActions.showMessage({ message: error.message }));
+				// });
 			break;
 		}
 		case 'auth0': {
