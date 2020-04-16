@@ -32,25 +32,56 @@ const useStyles = makeStyles(theme => ({
 	navigation: {
 		'& .list-item': {
 			'&:hover': {
-				backgroundColor: theme.palette.type === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,.04)'
+				// backgroundColor: theme.palette.type === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,.04)'
+				// backgroundImage:"linear-gradient(90deg,#55c3b7 0,#5fd0a5 48%,#66da90 100%);",
+				backgroundColor:"rgba(0,0,0,.01)",
+				color:"#5fd0a5",
+				// fontWeight:900,
+				transition:"all .2s ease-in-out",
+				'& $path': {
+					fontWeight:900,
+					fontSize:"13px",
+					color:"#5fd0a5"
+				  },
+				
+				  '& $span':{
+					color:"#5fd0a5",
+					transition:"all .2s ease-in-out",
+					// fontWeight:900,
+				  },
+				 
 			},
 			'&:focus:not(.active)': {
-				backgroundColor: theme.palette.type === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0,0,0,.05)'
-			}
+				// backgroundColor: theme.palette.type === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0,0,0,.05)',
+				backgroundColor:"rgba(0,0,0,.01)",
+				color:"#5fd0a5",
+				// fontWeight:900,
+				
+				// backgroundColor:"green"
+			},
+			color:"rgba(125,125,131,.8)",
+	
+			// fontWeight:900 //text color normal
 		}
 	},
 	verticalNavigation: {
 		'&.active-square-list': {
 			'& .list-item, & .active.list-item': {
 				width: '100%',
-				borderRadius: '0'
+				borderRadius: '0',
+				color:"orange",
+				backgroundColor:"pink",
+				fontWeight:900,
+			
 			}
 		},
 		'&.dense': {
 			'& .list-item': {
 				paddingTop: 0,
 				paddingBottom: 0,
-				height: 32
+				height: 32,
+				color:"orange",
+				backgroundColor:"pink"
 			}
 		}
 	},
@@ -109,7 +140,9 @@ function FuseNavigation(props) {
 				`active-${active}-list`,
 				dense && 'dense',
 				className
+				
 			)}
+			style={{color:"red",background:""}}
 		>
 			{navigation.map(_item => (
 				<FuseNavItem key={_item.id} type={`vertical-${_item.type}`} item={_item} nestedLevel={0} />

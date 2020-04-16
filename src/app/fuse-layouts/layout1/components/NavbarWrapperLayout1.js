@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 		overflow: 'hidden',
 		flexDirection: 'column',
 		flex: '1 1 auto',
+		background:"#FFF",
 		width: navbarWidth,
 		minWidth: navbarWidth,
 		height: '100%',
@@ -39,7 +40,8 @@ const useStyles = makeStyles(theme => ({
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.shorter
 		}),
-		boxShadow: theme.shadows[3]
+		// boxShadow: theme.shadows[0]
+		boxShadow:"0 0 1.25rem rgba(31,45,61,.04)"
 	},
 	left: {
 		left: 0
@@ -144,7 +146,8 @@ function NavbarWrapperLayout1(props) {
 							)}
 							onMouseEnter={() => foldedAndClosed && dispatch(Actions.navbarOpenFolded())}
 							onMouseLeave={() => foldedAndOpened && dispatch(Actions.navbarCloseFolded())}
-							style={{ backgroundColor: navbarTheme.palette.background.default }}
+							// style={{ backgroundColor: navbarTheme.palette.background.default }}
+							// style={{backgroundColor:"green"}}
 						>
 							<NavbarLayout1 className={classes.navbarContent} />
 						</div>

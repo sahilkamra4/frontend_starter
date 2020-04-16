@@ -7,13 +7,18 @@ const themesConfig = {
 			type: 'light',
 			primary: fuseDark,
 			secondary: {
-				light: skyBlue[100],
-				main: skyBlue[500],
-				dark: skyBlue[900]
+				light: 'red',
+				// main: '#F7F7F7',
+				main: "#9400D3",
+				dark: "linear-gradient(90deg,#55c3b7 0,#5fd0a5 48%,#66da90 100%);"
 			},
 			background: {
 				paper: '#FFFFFF',
-				default: '#F7F7F7'
+				default: '#F7F7F7',
+
+				
+				// default: '#f8faf9'
+				// default:"#9400D3"
 			},
 			error: red
 		},

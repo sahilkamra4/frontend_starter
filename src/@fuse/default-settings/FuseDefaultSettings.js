@@ -39,7 +39,8 @@ export function getParsedQuerySettings() {
  */
 export const defaultThemeOptions = {
 	typography: {
-		fontFamily: ['Muli', 'Roboto', '"Helvetica"', 'Arial', 'sans-serif'].join(','),
+		// fontFamily: ['Muli', 'Roboto', '"Helvetica"', 'Arial', 'sans-serif'].join(','),
+		fontFamily: ['Lato','sans-serif'],
 		fontWeightLight: 300,
 		fontWeightRegular: 400,
 		fontWeightMedium: 600,
@@ -98,22 +99,22 @@ export function extendThemeWithMixins(obj) {
 	return {
 		border: (width = 1) => ({
 			borderWidth: width,
-			borderStyle: 'solid',
+			borderStyle: 'transparent',
 			borderColor: theme.palette.divider
 		}),
 		borderLeft: (width = 1) => ({
 			borderLeftWidth: width,
-			borderStyle: 'solid',
+			borderStyle: 'transparent',
 			borderColor: theme.palette.divider
 		}),
 		borderRight: (width = 1) => ({
 			borderRightWidth: width,
-			borderStyle: 'solid',
+			borderStyle: 'transparent',
 			borderColor: theme.palette.divider
 		}),
 		borderTop: (width = 1) => ({
 			borderTopWidth: width,
-			borderStyle: 'solid',
+			borderStyle: 'transparent',
 			borderColor: theme.palette.divider
 		}),
 		borderBottom: (width = 1) => ({
@@ -131,8 +132,10 @@ export function mainThemeVariations(theme) {
 				palette: {
 					type: 'dark',
 					background: {
-						paper: '#1E2125',
-						default: '#121212'
+						// paper: '#1E2125',
+						paper:"#FFF",
+						// default: '#121212',
+						default:"#FFF"
 					}
 				},
 				...mustHaveThemeOptions
@@ -144,7 +147,8 @@ export function mainThemeVariations(theme) {
 					type: 'light',
 					background: {
 						paper: '#FFFFFF',
-						default: '#F7F7F7'
+						// default: '#F7F7F7'
+						default:"#f8faf9"
 					}
 				},
 				...mustHaveThemeOptions

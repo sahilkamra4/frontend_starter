@@ -31,7 +31,9 @@ import Box from '@material-ui/core/Box';
 
 
 const useStyles = makeStyles(theme => ({
-	layoutRoot: {},
+	layoutRoot: {
+
+	},
 	modal: {
 		display: 'flex',
 		alignItems: 'top',
@@ -58,14 +60,16 @@ const useStyles = makeStyles(theme => ({
 	//   },
 	paper: {
 		position: 'absolute',
-		width: '80%',
+		width: '45%',
 		// height:'40vh',
 		// overflow:'scroll',
 		backgroundColor: theme.palette.background.paper,
 	  //   border: '2px solid #000',
 		borderRadius:"25px",
 		boxShadow: theme.shadows[10],
-		padding: theme.spacing(2, 4, 3),
+		// padding: theme.spacing(2, 4, 3),
+		marginTop:"8%",
+		marginLeft:"5%",
 		
 		outline:0,
 	  },
@@ -155,18 +159,19 @@ function ExamplePage(props) {
 			// 		<h4>Content Toolbar</h4>
 			// 	</div>
 			// }
+		
 			content={
 
-				<div className="p-24" style={{textAlign:""}}>
+				<div className="p-24" style={{textAlign:"",background:"#f8faf9"}}>
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
 						<Grid item lg={8} md={8}>
 					<h4>Content</h4>
 					<br />
 					</Grid>
 					{/* <DemoContent /> */}
-							<Grid item lg={8} md={8} sm={12} xs={12} >	
+							<Grid item lg={7} md={7} sm={9} xs={9} >	
 						{props.currentState.customReducers.upload.tweet.map((value,index)=>
-					<Card style={{width:"",background:""}} className="w-full items-end overflow-hidden">
+					<Card style={{width:"",boxShadow: "0 0 1.25rem rgba(31,45,61,.08)",borderRadius:"25px",}} className="w-full items-end overflow-hidden">
 
 					
 						<Input
@@ -185,7 +190,7 @@ function ExamplePage(props) {
 						/>}
 						onFocus={displayEdit}
 						className="p-16 w-full"
-						style={{borderTopLeftRadius:"5%"}}
+						style={{borderRadius:"25px",}}
 						classes={{ root: 'text-14' }}
 						placeholder="Write something.."
 						multiline
@@ -201,7 +206,7 @@ function ExamplePage(props) {
 								position="static"
 								color="default"
 								elevation={0}
-								style={{display:`${displayEditTweet}`}}
+								style={{display:`${displayEditTweet}`,borderStyle:"none",background:"white"}}
 							>
 								<div className="flex-1 items-center" style={{background:""}} >
 									<IconButton onClick={uploadImage}  aria-label="Add photo">
@@ -257,13 +262,15 @@ function ExamplePage(props) {
 		  style={{background:""}} >
 		  {/* <Box height="80%" style={{overflow:"scroll",maxHeight:"150%"}}> */}
 		  {props.currentState.customReducers.upload.tweet.map((value,index)=>
-					<Card style={{width:"",background:""}} className="w-full items-end overflow-hidden">
+					<Card elevation={0} style={{width:"",background:"",border:"1px solid transparent"}} className="w-full items-end overflow-hidden">
 
 					
 						<Input
 						key={index}
 						startAdornment={	<Avatar
 							style={{marginRight:"15px",
+							border:"1px solid transparent",
+						
 							
 						}}
 							className={clsx(classes.avatar, 'avatar')}
@@ -276,7 +283,7 @@ function ExamplePage(props) {
 						/>}
 						onFocus={displayEdit}
 						className="p-16 w-full"
-						style={{borderTopLeftRadius:"5%"}}
+						style={{borderRadius:"15px",border:"1px solid transparent"}}
 						classes={{ root: 'text-14' }}
 						placeholder="Write something.."
 						multiline
@@ -288,13 +295,13 @@ function ExamplePage(props) {
 					
 							
 							<AppBar
-								className="card-footer flex flex-row border-t-1"
+								className="card-footer flex flex-row "
 								position="static"
 								color="default"
 								elevation={0}
-								style={{display:`${displayEditTweet}`}}
+								style={{display:`${displayEditTweet}`,borderStyle:"none"}}
 							>
-								<div className="flex-1 items-center" style={{background:""}} >
+								<div className="flex-1 items-center" style={{background:"red",borderStyle:"none"}} >
 									<IconButton onClick={uploadImage}  aria-label="Add photo">
 										<Icon>photo</Icon>
 									</IconButton>
@@ -306,7 +313,7 @@ function ExamplePage(props) {
 								
 								</div>
 
-								<div className="p-8">
+								<div className="p-8" style={{borderStyle:"none"}}>
 								<IconButton style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
 										<Icon>circle_add</Icon>
 									</IconButton>

@@ -27,6 +27,7 @@ function FuseNavBadge(props) {
 			className={clsx(classes.root, className, 'item-badge')}
 			style={{
 				backgroundColor: badge.bg,
+				// backgroundColor:"pink",
 				color: badge.fg
 			}}
 		>

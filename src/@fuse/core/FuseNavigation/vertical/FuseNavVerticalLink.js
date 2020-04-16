@@ -21,10 +21,12 @@ const useStyles = makeStyles(theme => ({
 		paddingRight: 12,
 		paddingLeft: props.itemPadding > 80 ? 80 : props.itemPadding,
 		'&.active': {
-			backgroundColor: theme.palette.secondary.main,
-			color: `${theme.palette.secondary.contrastText}!important`,
+			// backgroundColor: 'theme.palette.secondary.main',
+			backgroundColor:"pink",
+			// color: `${theme.palette.secondary.contrastText}!important`,
+			color:"blue",
 			pointerEvents: 'none',
-			transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
+			// transition: 'border-radius .15s cubic-bezier(0.4,0.0,0.2,1)',
 			'& .list-item-text-primary': {
 				color: 'inherit'
 			},
@@ -79,6 +81,7 @@ function FuseNavVerticalLink(props) {
 				className="list-item-text"
 				primary={item.translate ? t(item.translate) : item.title}
 				classes={{ primary: 'text-14 list-item-text-primary' }}
+				style={{background:"green"}}
 			/>
 
 			{item.badge && <FuseNavBadge badge={item.badge} />}

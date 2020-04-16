@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 		'&.boxed': {
 			maxWidth: 1280,
 			margin: '0 auto',
-			boxShadow: theme.shadows[3]
+			boxShadow: theme.shadows[1]
 		},
 		'&.scroll-body': {
 			'& $wrapper': {

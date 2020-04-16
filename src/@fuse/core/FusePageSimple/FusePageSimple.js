@@ -112,13 +112,14 @@ const useStyles = makeStyles(theme => ({
 	},
 	leftSidebar: {
 		[theme.breakpoints.up('lg')]: {
-			borderRight: `1px solid ${theme.palette.divider}`,
+			// borderRight: `1px solid ${theme.palette.divider}`,
+			borderRight:"",
 			borderLeft: 0
 		}
 	},
 	rightSidebar: {
 		[theme.breakpoints.up('lg')]: {
-			borderLeft: `1px solid ${theme.palette.divider}`,
+			// borderLeft: `1px solid ${theme.palette.divider}`,
 			borderRight: 0
 		}
 	},

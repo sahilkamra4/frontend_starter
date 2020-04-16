@@ -10,6 +10,8 @@ import Navigation from 'app/fuse-layouts/shared-components/Navigation';
 import UserNavbarHeader from 'app/fuse-layouts/shared-components/UserNavbarHeader';
 import clsx from 'clsx';
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
 	content: {
@@ -35,18 +37,29 @@ function NavbarLayout1(props) {
 				position="static"
 				elevation={0}
 				className="flex flex-row items-center flex-shrink h-64 min-h-64 px-12"
+				style={{backgroundColor:"#FFF"}}
 			>
 				<div className="flex flex-1 mx-8">
 					{/* <Logo /> */}
 				</div>
 
 				<Hidden mdDown>
-					<NavbarFoldedToggleButton className="w-40 h-40 p-0" />
+					<Grid container alignItems="center">
+						<Grid item lg={8} md={8} sm={8} xs={8}>
+						<Typography style={{display:"flex",color:"black",textAlign:"left"}}>TweetKing</Typography>
+						</Grid>
+						<Grid item lg={3} md={3} sm={3} xs={3}>
+						<NavbarFoldedToggleButton className="w-40 h-40 p-0" />
+						</Grid>
+						
+					</Grid>
+
+					
 				</Hidden>
 
 				<Hidden lgUp>
 					<NavbarMobileToggleButton className="w-40 h-40 p-0">
-						<Icon>{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}"</Icon>
+						<Icon >{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}"</Icon>
 					</NavbarMobileToggleButton>
 				</Hidden>
 			</AppBar>

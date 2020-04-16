@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 		paddingRight: 12,
 		paddingLeft: props.itemPadding > 80 ? 80 : props.itemPadding,
 		'&.active > .list-subheader-text': {
-			fontWeight: 700
+			fontWeight: 900
 		}
 	})
 }));

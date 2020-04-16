@@ -19,7 +19,8 @@ function NavbarFoldedToggleButton(props) {
 					)
 				);
 			}}
-			color="inherit"
+			// color="inherit"
+			style={{color:"black"}}
 		>
 			{props.children}
 		</IconButton>

@@ -33,6 +33,8 @@ function ToolbarLayout1(props) {
 				className="flex relative z-10"
 				color="default"
 				style={{ backgroundColor: toolbarTheme.palette.background.default }}
+
+				elevation={0}
 			>
 				<Toolbar className="p-0">
 					{config.navbar.display && config.navbar.position === 'left' && (
