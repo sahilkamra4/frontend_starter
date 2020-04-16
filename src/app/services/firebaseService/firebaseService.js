@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 import config from './firebaseServiceConfig';
 // var firebaseui = require('firebaseui')
 import * as firebaseui from 'firebaseui'
@@ -41,8 +42,10 @@ class FirebaseService {
 		this.db = firebase.firestore();
 		this.auth = firebase.auth();
 		this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+		this.storageRef = new firebase.storage().ref()
 		console.log(firebase.app().name)
 		this.provider = new firebase.auth.TwitterAuthProvider();
+		// console.log(firebase.auth().currentUser().getIdToken());
 
 		success(true);
 	}
@@ -174,12 +177,12 @@ class FirebaseService {
 					  
 					  "userId":user.uid,
 					  "displayName":user.displayName,
-					  "photoURL":user.photoURL,
+					  "photoURL":user.providerData[0].photoURL,
 					  "email":user.email || "not given",
 					  "emailVerified":user.emailVerified,
 					  "token":result.credential.accessToken,
 					  "secret":result.credential.secret,
-					  "role":"admin",
+					  "role":["admin"],
 					  "paymentStatus":"unpaid"
 					},
 					{ merge: true },
@@ -263,6 +266,14 @@ class FirebaseService {
 			},
 			{ merge: true },
 		  );
+	}
+	getCurrentUser=()=>{
+		return this.auth.currentUser
+	}
+
+	getRootRef=()=>{
+		// var spaceRef = this.storageRef.child('images/space.jpg');
+		return this.storageRef
 	}
 
 }

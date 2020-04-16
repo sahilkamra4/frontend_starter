@@ -122,6 +122,9 @@ class Auth extends Component {
 					this.props.showMessage({ message: 'Logging in with Firebase' });
 					console.log("auth exists")
 					console.log(authUser)
+					// console.log(firebaseService.getCurrentUser())
+					// console.log(authUser.getIdToken())
+					// console.log(authUser.getAuthResponse().id_token)
 					// firebaseService.addAuthUserData(authUser)
 					
 					console.log("line")
@@ -173,7 +176,7 @@ function mapDispatchToProps(dispatch) {
 			setUserDataFirebase: userActions.setUserDataFirebase,
 			showMessage: Actions.showMessage,
 			hideMessage: Actions.hideMessage,
-			getAuthFunc:userActions.getAuthFunction
+			// getAuthFunc:userActions.getAuthFunction
 		},
 		dispatch
 	);

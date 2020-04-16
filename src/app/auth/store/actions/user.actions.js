@@ -7,7 +7,6 @@ import * as MessageActions from 'app/store/actions/fuse/message.actions';
 import * as FuseActions from 'app/store/actions/fuse';
 import firebase from 'firebase/app';
 import FirebaseService from 'app/services/firebaseService';
-
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
@@ -73,8 +72,9 @@ export function createUserSettingsFirebase(authUser) {
 			from: 'firebase',
 			role: ['admin'],
 			data:{
-			displayName: authUser.displayName,
-			photoURL: authUser.photoURL,
+			displayName: authUser.providerData[0].displayName,
+			photoURL: authUser.providerData[0].photoURL,
+			// photoURL:"https://pbs.twimg.com/profile_images/1245958090249261056/XKnM5zuj.jpg"
 			}
 			
 			// data: {

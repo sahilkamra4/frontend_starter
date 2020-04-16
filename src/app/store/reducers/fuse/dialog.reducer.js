@@ -15,7 +15,8 @@ const dialog = (state = initialState, action) => {
 				state: true,
 				options: {
 					...state.options,
-					...action.options
+					...action.options,
+				
 				}
 			};
 		}

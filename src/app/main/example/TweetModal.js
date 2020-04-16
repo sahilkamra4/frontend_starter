@@ -27,7 +27,6 @@ import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import Box from '@material-ui/core/Box';
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,43 +35,23 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		alignItems: 'top',
 		justifyContent: 'center',
-		
 		// outline:0
 		// top: "10%",
 		// left: "15%",
 		// transform: `translate(-10%, -15%)`,
 	  },
-	//   paper: {
-	// 	backgroundColor: theme.palette.background.paper,
-	// 	// border: '2px solid #000',
-	// 	boxShadow: theme.shadows[5],
-	// 	padding: theme.spacing(2, 4, 3),
-	// 	maxHeight:"40%",
-	// 	// height:"auto",width:"60%",
-	// 	// maxHeight:"auto",
-	// 	// overflow:"scroll",
-	// 	// overflowY:"scroll",
-	// 	// marginTop:"5%",marginLeft:"5%",
-	// 	// minHeight:"auto",
-	// 	outline:0
-	//   },
-	paper: {
-		position: 'absolute',
-		width: '80%',
-		// height:'40vh',
-		// overflow:'scroll',
+	  paper: {
 		backgroundColor: theme.palette.background.paper,
-	  //   border: '2px solid #000',
-		borderRadius:"25px",
-		boxShadow: theme.shadows[10],
+		border: '2px solid #000',
+		boxShadow: theme.shadows[5],
 		padding: theme.spacing(2, 4, 3),
-		
-		outline:0,
+		height:"50%",width:"60%",
+		marginTop:"5%",marginLeft:"5%",
+		outline:0
 	  },
-	  
 }));
 
-function ExamplePage(props) {
+function TweetModal(props) {
 	const classes = useStyles(props);
 	const { t } = useTranslation('examplePage');
 	const [displayEditTweet,setDisplayEditTweet]=useState('')
@@ -141,101 +120,8 @@ function ExamplePage(props) {
 		firebase.getRedirectCode()
 	}	)
 	return (
-		<FusePageSimple
-			classes={{
-				root: classes.layoutRoot
-			}}
-			// header={
-			// 	<div className="p-24">
-			// 		<h4>{t('TITLE')}</h4>
-			// 	</div>
-			// }
-			// contentToolbar={
-			// 	<div className="px-24">
-			// 		<h4>Content Toolbar</h4>
-			// 	</div>
-			// }
-			content={
-
-				<div className="p-24" style={{textAlign:""}}>
-					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
-						<Grid item lg={8} md={8}>
-					<h4>Content</h4>
-					<br />
-					</Grid>
-					{/* <DemoContent /> */}
-							<Grid item lg={8} md={8} sm={12} xs={12} >	
-						{props.currentState.customReducers.upload.tweet.map((value,index)=>
-					<Card style={{width:"",background:""}} className="w-full items-end overflow-hidden">
-
-					
-						<Input
-						key={index}
-						startAdornment={	<Avatar
-							style={{marginRight:"15px",
-							
-						}}
-							className={clsx(classes.avatar, 'avatar')}
-							alt="user photo"
-							src={
-								props.currentState.auth.user.data.photoURL && props.currentState.auth.user.data.photoURL !== ''
-									? props.currentState.auth.user.data.photoURL
-									: 'assets/images/avatars/profile.jpg'
-							}
-						/>}
-						onFocus={displayEdit}
-						className="p-16 w-full"
-						style={{borderTopLeftRadius:"5%"}}
-						classes={{ root: 'text-14' }}
-						placeholder="Write something.."
-						multiline
-						rows="3"
-						rowsMax="8"
-						margin="none"
-						disableUnderline
-					/>
-					
-							
-							<AppBar
-								className="card-footer flex flex-row border-t-1"
-								position="static"
-								color="default"
-								elevation={0}
-								style={{display:`${displayEditTweet}`}}
-							>
-								<div className="flex-1 items-center" style={{background:""}} >
-									<IconButton onClick={uploadImage}  aria-label="Add photo">
-										<Icon>photo</Icon>
-									</IconButton>
-									<input style={{display:"none"}} multiple ref={inputFile} type="file" accept="image/*" onChange={imageSelectedHandler}>
-									</input>
-									<IconButton aria-label="Mention somebody">
-										<Icon>person</Icon>
-									</IconButton>
-								
-								</div>
-
-								<div className="p-8">
-								<IconButton style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
-										<Icon>circle_add</Icon>
-									</IconButton>
-									<Button variant="contained" onClick={testUpload} color="primary" size="small" aria-label="post">
-										Schedule
-									</Button>
-								</div>
-							</AppBar>
-							
-						</Card>	
-
-					)}
-					</Grid>
-				<Grid item lg={8} md={8}>
-				<h1>Scheduled Tweets</h1>
-				<button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
-	  <main>     
-		<Modal
+		<div>
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -244,18 +130,11 @@ function ExamplePage(props) {
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
-		  timeout: 500,
-		  style:{background:'rgba(82, 82, 87, 0.8)',}
-		}}
-	
-		
-		
+          timeout: 500,
+        }}
       >
         <Fade in={open}>
-		  <div 
-		  className={classes.paper} 
-		  style={{background:""}} >
-		  {/* <Box height="80%" style={{overflow:"scroll",maxHeight:"150%"}}> */}
+          <div className={classes.paper}>
 		  {props.currentState.customReducers.upload.tweet.map((value,index)=>
 					<Card style={{width:"",background:""}} className="w-full items-end overflow-hidden">
 
@@ -315,24 +194,21 @@ function ExamplePage(props) {
 									</Button>
 								</div>
 							</AppBar>
-												</Card>	
+						</Card>	
 
 					)}
-	{/* </Box> */}
+
           </div>
         </Fade>
-		
       </Modal>
-	  </main>
-				</Grid>
-				</Grid>
+				
 				</div>
 
 
-			}
+			
 
 		
-		/>
+	
 	);
 }
 
