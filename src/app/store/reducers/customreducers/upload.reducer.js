@@ -7,35 +7,88 @@ const initialState={
     tweet:[{
         files:"",
         status:"",
-        tweet_thread:1
+        tweet_thread:0
     }]
 }
 
 const upload =(state=initialState,action)=>{
+
+    console.log(state)
+    console.log(action)
+
     switch(action.type){
-        case customActions.SET_IMAGE:
+        case customActions.SET_IMAGE:{
             return{
                 file:action.payload,
                 // ...initialState
             }
-        case customActions.ADD_SUBTWEET:
+        }
+
+        case customActions.SET_TWEET:{
+            var currentState={...state}
+            console.log(currentState)
+            var value=action.value
+            var thread_index=action.thread_index
+            currentState.tweet[thread_index]={
+                ...currentState.tweet[thread_index],
+                status:value
+            }
+            var newState={
+                ...currentState,
+                tweet:currentState.tweet
+            }
+            
+            return newState
+        }
+
+        case customActions.ADD_SUBTWEET:{
 
             var currentState={...state}
-            currentState.tweet.append({
-                files:"",
+            var tweet_index=action.tweet_index
+           console.log(state)
+           console.log(initialState)
+           console.log(action)
+           console.log(tweet_index)
+            tweet_index=tweet_index+1
+
+            var newTweet={
+
+                files:"ff",
                 status:"",
-                tweet_thread:action.tweet_num
+                tweet_thread:tweet_index
             
-            })
-
-            return {
-                
-                
 
             }
-            default: {
+            var newTweetArr=[]
+            console.log(currentState.tweet)
+            console.log(typeof currentState.tweet)
+            if(tweet_index-1 ==currentState.tweet.length){
+                console.log(tweet_index)
+                 newTweetArr=currentState.tweet.push(newTweet)
+            }
+            else{
+                var fruits = ["Banana", "Orange", "Apple", "Mango"];
+                fruits.splice(2, 0, "Lemon", "Kiwi");
+                console.log(fruits)
+                fruits.splice(tweet_index, 0, newTweet, "Kiwi");
+                console.log(tweet_index)
+                console.log(fruits)
+                console.log(currentState.tweet)
+                currentState.tweet.splice(tweet_index,0,newTweet)
+                console.log(currentState.tweet)
+            newTweetArr= currentState.tweet
+            }
+            console.log(newTweetArr)
+           var newState=currentState
+           newState.tweet=newTweetArr
+            console.log(newState)
+           // let newState=currentState.tweet.append(newTeet)
+            return newState
+        }
+        default:{
+                console.log("This is happening")
                 return state;
-            }
+        }
     }
 
 }

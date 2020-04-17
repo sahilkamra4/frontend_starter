@@ -13,6 +13,7 @@ function NavbarMobileToggleButton(props) {
 			onClick={ev => dispatch(Actions.navbarToggleMobile())}
 			color="inherit"
 			disableRipple
+			style={{color:"black",borderStyle:"none"}}
 		>
 			{props.children}
 		</IconButton>

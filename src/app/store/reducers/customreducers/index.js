@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import upload from './upload.reducer'
-const fuseReducers = combineReducers({
+
+const CustomReducers = combineReducers({
 	upload,
 	
 });
 
-export default fuseReducers;
+export default CustomReducers;

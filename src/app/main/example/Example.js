@@ -28,11 +28,20 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles(theme => ({
 	layoutRoot: {
+		// height:"100vh"
+		
+	},
 
+	separator: {
+		width: 1,
+		height: 64,
+		backgroundColor: theme.palette.divider,
+		marginLeft:"15px"
 	},
 	modal: {
 		display: 'flex',
@@ -61,9 +70,14 @@ const useStyles = makeStyles(theme => ({
 	paper: {
 		position: 'absolute',
 		width: '45%',
-		// height:'40vh',
+		
+		[theme.breakpoints.down('md')]: {
+			width:"80%",
+			marginRight:"20px"
+		  },
 		// overflow:'scroll',
-		backgroundColor: theme.palette.background.paper,
+		// backgroundColor: theme.palette.background.paper,
+		backgroundColor:"#F5F5F5",
 	  //   border: '2px solid #000',
 		borderRadius:"25px",
 		boxShadow: theme.shadows[10],
@@ -72,6 +86,7 @@ const useStyles = makeStyles(theme => ({
 		marginLeft:"5%",
 		
 		outline:0,
+		
 	  },
 	  
 }));
@@ -81,8 +96,9 @@ function ExamplePage(props) {
 	const { t } = useTranslation('examplePage');
 	const [displayEditTweet,setDisplayEditTweet]=useState('')
 	const dispatch = useDispatch();
-	const dialogstate = useSelector(({ fuse }) => fuse.dialog.state);
+	const dialogstate = useSelector((state) => state);
 	const inputFile = useRef(null) 
+	const tweetState=useSelector(({customReducers})=>customReducers.upload.tweet)
 	const uploadImage=()=>{
 		console.log("Uploading... file...")
 		inputFile.current.click()
@@ -97,7 +113,8 @@ function ExamplePage(props) {
     setOpen(false);
   };
 
-  
+  console.log(tweetState)
+  console.log(dialogstate)
 
 	console.log(props)
 	const imageSelectedHandler=(event)=>{
@@ -123,8 +140,13 @@ function ExamplePage(props) {
 		}
 	}
 
-	const addTweet = () =>{
+	const addTweet = (index) =>{
+		console.log(index)
+		props.addSubtweet(index)
+	}
+	const setTweet=(event,index)=>{
 
+		props.setTweet(event.target.value,index)
 	}
 
 	const displayEdit=()=>{
@@ -136,11 +158,11 @@ function ExamplePage(props) {
 	// const fd=new FormData()
 	// fd.append('ppgrade',props.customReducers.upload.file,props.customReducers.upload.file.name)
 	var ppGrade=firebase.getRootRef().child('ppgrade.jpg')
-	ppGrade.put(props.currentState.customReducers.upload.file).then(function(snapshot) {
+	ppGrade.put(props.currentState.customReducers.upload.tweet).then(function(snapshot) {
 		console.log('Uploaded a blob or file!');
 	  }); 
 	}
-
+console.log(props.currentState.customReducers.upload.tweet)
 	useEffect(()=>{
 		firebase.getRedirectCode()
 	}	)
@@ -162,23 +184,28 @@ function ExamplePage(props) {
 		
 			content={
 
-				<div className="p-24" style={{textAlign:"",background:"#f8faf9"}}>
+				<div className="p-24" 
+				style={{textAlign:"",
+				// background:"#f8faf9"
+				// background:'red',
+		
+				}}>
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
-						<Grid item lg={8} md={8}>
-					<h4>Content</h4>
+						<Grid item lg={12} md={12} sm={12} xs={12}>
+					<Typography>Scheduled Tweets </Typography>
 					<br />
 					</Grid>
 					{/* <DemoContent /> */}
-							<Grid item lg={7} md={7} sm={9} xs={9} >	
-						{props.currentState.customReducers.upload.tweet.map((value,index)=>
-					<Card style={{width:"",boxShadow: "0 0 1.25rem rgba(31,45,61,.08)",borderRadius:"25px",}} className="w-full items-end overflow-hidden">
+							<Grid item lg={7} md={7} sm={8} xs={8} >	
+						{tweetState.map((value,index)=>
+					<Card key={index} style={{width:"",boxShadow: "0 0 1.25rem rgba(31,45,61,.08)",borderRadius:"15px",}} className="w-full items-end overflow-hidden">
 
-					
+					{/* <div className={classes.separator} /> */}
 						<Input
-						key={index}
+						
 						startAdornment={	<Avatar
-							style={{marginRight:"15px",
-							
+							style={{
+							marginRight:"15px",
 						}}
 							className={clsx(classes.avatar, 'avatar')}
 							alt="user photo"
@@ -190,6 +217,110 @@ function ExamplePage(props) {
 						/>}
 						onFocus={displayEdit}
 						className="p-16 w-full"
+						onChange={(event)=>setTweet(event,index)}
+						style={{borderRadius:"25px"}}
+						classes={{ root: 'text-14' }}
+						placeholder="Write something.."
+						multiline
+						rows="3"
+						rowsMax="8"
+						margin="none"
+						disableUnderline
+						value={value.status}
+						// classes={{adornedStart: {
+						// 	marginTop:0,
+						// 	verticalAlign:"text-top",display:"inline-block"
+						//   },}}
+					/>
+					
+							
+							<AppBar
+								className="card-footer flex flex-row border-t-1"
+								position="static"
+								color="default"
+								elevation={0}
+								style={{display:`${displayEditTweet}`,borderStyle:"none",background:"white"}}
+							>
+								<div className="flex-1 items-center" style={{background:""}} >
+									<IconButton onClick={uploadImage}  aria-label="Add photo">
+										<Icon>photo</Icon>
+									</IconButton>
+									<input style={{display:"none"}} multiple ref={inputFile} type="file" accept="image/*" onChange={imageSelectedHandler}>
+									</input>
+									<IconButton aria-label="Mention somebody">
+										<Icon>person</Icon>
+									</IconButton>
+								
+								</div>
+
+								<div className="p-8">
+								<IconButton onClick={()=>addTweet(index)} style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
+										<Icon>circle_add</Icon>
+									</IconButton>
+									<Button variant="contained" onClick={testUpload} color="primary" size="small" aria-label="post">
+										Schedule
+									</Button>
+								</div>
+							</AppBar>
+							
+						</Card>	
+
+					)}
+					</Grid>
+				<Grid item lg={8} md={8} sm={8} xs={8}>
+				<h1>Scheduled Tweets</h1>
+				<button type="button" onClick={handleOpen}>
+        react-transition-group
+      </button>
+	  <main>     
+		<Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+		  timeout: 500,
+		  style:{background:'rgba(82, 82, 87, 0.8)',}
+		}}
+		
+		
+		
+      >
+        <Fade in={open}>
+		  <div 
+		  className={classes.paper} 
+		  style={{background:"",display:"flex",justifyContent:"center"}} >
+		  {/* <Box height="80%" style={{overflow:"scroll",maxHeight:"150%"}}> */}
+		 
+		  <Card style={{width:"",boxShadow: "0 0 1.25rem rgba(31,45,61,.08)",borderRadius:"15px",
+		  
+		}} 
+		  className="w-full items-end overflow-hidden"
+		  >
+ 		{tweetState.map((value,index)=>
+				
+					// <hr></hr>
+					<div key={index}>
+						<Input
+						
+						startAdornment={	<Avatar
+							style={{marginRight:"15px",
+							opacity:"0.2"
+						}}
+							className={clsx(classes.avatar, 'avatar')}
+							alt="user photo"
+							src={
+								props.currentState.auth.user.data.photoURL && props.currentState.auth.user.data.photoURL !== ''
+									? props.currentState.auth.user.data.photoURL
+									: 'assets/images/avatars/profile.jpg'
+							}
+						/>}
+						onFocus={displayEdit}
+						className="p-16 w-full"
+						value={value.status}
 						style={{borderRadius:"25px",}}
 						classes={{ root: 'text-14' }}
 						placeholder="Write something.."
@@ -221,7 +352,7 @@ function ExamplePage(props) {
 								</div>
 
 								<div className="p-8">
-								<IconButton style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
+								<IconButton onClick={()=>addTweet(index)} style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
 										<Icon>circle_add</Icon>
 									</IconButton>
 									<Button variant="contained" onClick={testUpload} color="primary" size="small" aria-label="post">
@@ -229,102 +360,11 @@ function ExamplePage(props) {
 									</Button>
 								</div>
 							</AppBar>
-							
+							</div>
+							)}
 						</Card>	
 
-					)}
-					</Grid>
-				<Grid item lg={8} md={8}>
-				<h1>Scheduled Tweets</h1>
-				<button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
-	  <main>     
-		<Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-		  timeout: 500,
-		  style:{background:'rgba(82, 82, 87, 0.8)',}
-		}}
-	
-		
-		
-      >
-        <Fade in={open}>
-		  <div 
-		  className={classes.paper} 
-		  style={{background:""}} >
-		  {/* <Box height="80%" style={{overflow:"scroll",maxHeight:"150%"}}> */}
-		  {props.currentState.customReducers.upload.tweet.map((value,index)=>
-					<Card elevation={0} style={{width:"",background:"",border:"1px solid transparent"}} className="w-full items-end overflow-hidden">
-
 					
-						<Input
-						key={index}
-						startAdornment={	<Avatar
-							style={{marginRight:"15px",
-							border:"1px solid transparent",
-						
-							
-						}}
-							className={clsx(classes.avatar, 'avatar')}
-							alt="user photo"
-							src={
-								props.currentState.auth.user.data.photoURL && props.currentState.auth.user.data.photoURL !== ''
-									? props.currentState.auth.user.data.photoURL
-									: 'assets/images/avatars/profile.jpg'
-							}
-						/>}
-						onFocus={displayEdit}
-						className="p-16 w-full"
-						style={{borderRadius:"15px",border:"1px solid transparent"}}
-						classes={{ root: 'text-14' }}
-						placeholder="Write something.."
-						multiline
-						rows="3"
-						rowsMax="8"
-						margin="none"
-						disableUnderline
-					/>
-					
-							
-							<AppBar
-								className="card-footer flex flex-row "
-								position="static"
-								color="default"
-								elevation={0}
-								style={{display:`${displayEditTweet}`,borderStyle:"none"}}
-							>
-								<div className="flex-1 items-center" style={{background:"red",borderStyle:"none"}} >
-									<IconButton onClick={uploadImage}  aria-label="Add photo">
-										<Icon>photo</Icon>
-									</IconButton>
-									<input style={{display:"none"}} multiple ref={inputFile} type="file" accept="image/*" onChange={imageSelectedHandler}>
-									</input>
-									<IconButton aria-label="Mention somebody">
-										<Icon>person</Icon>
-									</IconButton>
-								
-								</div>
-
-								<div className="p-8" style={{borderStyle:"none"}}>
-								<IconButton style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
-										<Icon>circle_add</Icon>
-									</IconButton>
-									<Button variant="contained" onClick={testUpload} color="primary" size="small" aria-label="post">
-										Schedule
-									</Button>
-								</div>
-							</AppBar>
-												</Card>	
-
-					)}
 	{/* </Box> */}
           </div>
         </Fade>
@@ -348,7 +388,8 @@ function mapDispatchToProps(dispatch) {
 		{
 			setUpload:customactions.setUpload,
 			setStatus:customactions.setStatus,
-			addSubtweet:customactions.addSubtweet
+			addSubtweet:customactions.addSubtweet,
+			setTweet:customactions.setTweet
 			// getAuthFunc:userActions.getAuthFunction
 		},
 		dispatch

@@ -12,8 +12,9 @@ import clsx from 'clsx';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { useDispatch, useSelector } from 'react-redux';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme=>({
 	content: {
 		overflowX: 'hidden',
 		overflowY: 'auto',
@@ -23,13 +24,21 @@ const useStyles = makeStyles({
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: '100% 40px, 100% 10px',
 		backgroundAttachment: 'local, scroll'
+	},
+	title:{
+		display:"none"
+		
 	}
-});
+
+
+}));
 
 function NavbarLayout1(props) {
 	const classes = useStyles();
 	const theme = useTheme();
-
+	const config = useSelector(({ fuse }) => fuse.settings.current.layout.config);
+	const navbarStatus=useSelector(({ fuse }) => fuse.navbar)
+	console.log(config)
 	return (
 		<div className={clsx('flex flex-col overflow-hidden h-full', props.className)}>
 			<AppBar
@@ -46,9 +55,14 @@ function NavbarLayout1(props) {
 				<Hidden mdDown>
 					<Grid container alignItems="center">
 						<Grid item lg={8} md={8} sm={8} xs={8}>
-						<Typography style={{display:"flex",color:"black",textAlign:"left"}}>TweetKing</Typography>
+						<Typography className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) )
+					
+							)} style={{color:"black"}}>TweetKing</Typography>
 						</Grid>
-						<Grid item lg={3} md={3} sm={3} xs={3}>
+						<Grid item lg={3} md={3} sm={3} xs={3} style={{display:"flex",justifyContent:"flex-end"}}>
 						<NavbarFoldedToggleButton className="w-40 h-40 p-0" />
 						</Grid>
 						
@@ -56,11 +70,27 @@ function NavbarLayout1(props) {
 
 					
 				</Hidden>
-
+				
+						
 				<Hidden lgUp>
+				<Grid container alignItems="center">
+						<Grid item lg={8} md={8} sm={8} xs={8}>
+						<Typography className={clsx(
+							(
+								((config.navbar.folded && classes.title) && 
+								(!navbarStatus.mobileOpen && classes.title))
+								   )
+					
+							)} style={{color:"black"}}>TweetKing</Typography>
+						</Grid>
+						<Grid item lg={3} md={3} sm={3} xs={3} style={{display:"flex",justifyContent:"flex-end"}}>
 					<NavbarMobileToggleButton className="w-40 h-40 p-0">
 						<Icon >{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}"</Icon>
 					</NavbarMobileToggleButton>
+					</Grid>
+						
+						</Grid>
+	
 				</Hidden>
 			</AppBar>
 

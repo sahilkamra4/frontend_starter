@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const useStyles = makeStyles(theme => ({
 	buttonIcon: {
 		fontSize: 18,
+		borderStyle:"none",
 		transition: theme.transitions.create(['transform'], {
 			easing: theme.transitions.easing.easeInOut,
 			duration: theme.transitions.duration.short
@@ -22,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 		top: 12,
 		width: 24,
 		borderRadius: 38,
+		borderStyle:"none",
 		padding: 8,
 		backgroundColor: theme.palette.background.paper,
 		transition: theme.transitions.create(['background-color', 'border-radius', 'width', 'min-width', 'padding'], {

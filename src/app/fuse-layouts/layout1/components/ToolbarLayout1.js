@@ -33,35 +33,35 @@ function ToolbarLayout1(props) {
 				className="flex relative z-10"
 				color="default"
 				style={{ backgroundColor: toolbarTheme.palette.background.default }}
-
 				elevation={0}
+				
 			>
-				<Toolbar className="p-0">
+				<Toolbar className="p-0" >
 					{config.navbar.display && config.navbar.position === 'left' && (
 						<Hidden lgUp>
 							<NavbarMobileToggleButton className="w-64 h-64 p-0" />
-							<div className={classes.separator} />
+							{/* <div className={classes.separator} /> */}
 						</Hidden>
 					)}
 
 					<div className="flex flex-1">
-						<Hidden mdDown>
+						{/* <Hidden mdDown>
 							<FuseShortcuts className="px-16" />
-						</Hidden>
+						</Hidden> */}
 					</div>
 
 					<div className="flex">
 						<UserMenu />
 
-						<div className={classes.separator} />
+						{/* <div className={classes.separator} /> */}
 
 						{/* <FuseSearch /> */}
 
-						<div className={classes.separator} />
+						{/* <div className={classes.separator} /> */}
 
 						{/* <LanguageSwitcher /> */}
 
-						<div className={classes.separator} />
+						{/* <div className={classes.separator} /> */}
 
 						{/* <QuickPanelToggleButton /> */}
 					</div>

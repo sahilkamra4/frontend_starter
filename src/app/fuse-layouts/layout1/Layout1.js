@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		width: '100%',
-		height: '100%',
+		height: '100vh',
 		overflow: 'hidden',
 		backgroundColor: theme.palette.background.default,
 		color: theme.palette.text.primary,
@@ -74,6 +74,7 @@ const useStyles = makeStyles(theme => ({
 		overflow: 'auto',
 		flex: '1 1 auto',
 		flexDirection: 'column',
+		
 		width: '100%',
 		'-webkit-overflow-scrolling': 'touch',
 		zIndex: 2
@@ -92,10 +93,10 @@ function Layout1(props) {
 	switch (config.scroll) {
 		case 'body': {
 			return (
-				<div id="fuse-layout" className={clsx(classes.root, config.mode, `scroll-${config.scroll}`)}>
+				<div id="fuse-layout" className={clsx(classes.root, config.mode, `scroll-${config.scroll}`)} >
 					{config.leftSidePanel.display && <LeftSideLayout1 />}
 
-					<div className="flex flex-1 flex-col overflow-hidden relative">
+					<div className="flex flex-1 flex-col overflow-hidden relative" >
 						{config.toolbar.display &&
 							config.toolbar.style === 'fixed' &&
 							config.toolbar.position === 'above' && <ToolbarLayout1 />}

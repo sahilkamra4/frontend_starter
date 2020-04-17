@@ -10,12 +10,12 @@ const config = {
 		},
 		toolbar: {
 			display: true,
-			style: 'fixed',
+			style: 'static',
 			position: 'below'
 		},
 		footer: {
-			display: true,
-			style: 'fixed',
+			display: false,
+			style: 'static',
 			position: 'below'
 		},
 		leftSidePanel: {

@@ -14,15 +14,18 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		display: 'flex',
 		flexDirection: 'column',
-		minHeight: '100%',
+		minHeight: '80%',
 		position: 'relative',
 		flex: '1 0 auto',
 		height: 'auto',
-		backgroundColor: theme.palette.background.default
+		backgroundColor: theme.palette.background.default,
+		// backgroundColor:"pink"
 	},
 	innerScroll: {
 		flex: '1 1 auto',
-		height: '100%'
+		height: '100%',
+	
+
 	},
 	wrapper: {
 		display: 'flex',
@@ -33,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 0,
 		height: '100%',
 		backgroundColor: theme.palette.background.default
+		
 	},
 	header: {
 		height: headerHeight,
@@ -77,7 +81,8 @@ const useStyles = makeStyles(theme => ({
 		flex: '1 1 auto',
 		overflow: 'auto',
 		'-webkit-overflow-scrolling': 'touch',
-		zIndex: 9999
+		zIndex: 9999,
+		background:"",
 	},
 	toolbar: {
 		height: toolbarHeight,
@@ -86,7 +91,8 @@ const useStyles = makeStyles(theme => ({
 		alignItems: 'center'
 	},
 	content: {
-		flex: '1 0 auto'
+		flex: '1 0 auto',
+		// background:"blue"
 	},
 	sidebarWrapper: {
 		overflow: 'hidden',
