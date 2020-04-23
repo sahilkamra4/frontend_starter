@@ -1,12 +1,18 @@
+import firebaseService from 'app/services/firebaseService';
+
 export const SET_IMAGE = '[IMAGE] SET';
 export const SET_STATUS = 'SET_STATUS';
 export const ADD_SUBTWEET ='ADD_SUBTWEET';
 export const SET_TWEET='SET_TWEET'
+export const SET_DOWNLOAD_URL='SET_DOWNLOAD_URL'
+export const SAVE_TWEET='SAVE_TWEET'
+export const RESET_STATE='RESET_STATE'
 
-export function setUpload(image) {
+export function setUpload(image,index) {
 	return {
 		type: SET_IMAGE,
-		payload:image
+		payload:image,
+		thread_index:index
 	};
 }
 
@@ -30,5 +36,28 @@ export function setTweet(value,index){
 		type:"SET_TWEET",
 		value:value,
 		thread_index:index
+	}
+}
+
+export function setDownloadUrl(value,index){
+	return {
+		type:"SET_DOWNLOAD_URL",
+		value:value,
+		thread_index:index
+	}
+}
+export function saveTweet(tweet_id,user_id){
+
+	
+	return {
+		type:"SAVE_TWEET",
+		tweet_id:tweet_id,
+		user_id:user_id
+	}
+}
+
+export function resetState(){
+	return {
+		type:"RESET_STATE"
 	}
 }

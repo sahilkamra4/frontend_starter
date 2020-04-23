@@ -53,6 +53,7 @@ class FirebaseService {
 
 	user = uid => this.db.doc(`users/${uid}`);
 	// users = () => this.db.collection('users');
+	tweet = tweetid =>this.db.doc(`scheduledTweets/${tweetid}`)
 
 	getUserData = userId => {
 		if (!firebase.apps.length) {
@@ -270,10 +271,22 @@ class FirebaseService {
 	getCurrentUser=()=>{
 		return this.auth.currentUser
 	}
+	
 
 	getRootRef=()=>{
 		// var spaceRef = this.storageRef.child('images/space.jpg');
 		return this.storageRef
+	}
+
+	saveTweet=(data,tweet_id)=>{
+
+		return new Promise((resolve,reject)=>{
+			console.log(data)
+			console.log(tweet_id)
+			this.tweet(data.tweet_id).set(data)
+			resolve("done")
+		})
+		
 	}
 
 }

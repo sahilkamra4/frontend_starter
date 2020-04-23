@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
 		height: '100vh',
 		overflow: 'hidden',
 		backgroundColor: theme.palette.background.default,
+	
 		color: theme.palette.text.primary,
 		'&.boxed': {
 			maxWidth: 1280,

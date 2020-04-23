@@ -25,7 +25,7 @@ function ToolbarLayout1(props) {
 
 	const classes = useStyles(props);
 	console.log(props)
-
+console.log( toolbarTheme.palette.background.default )
 	return (
 		<ThemeProvider theme={toolbarTheme}>
 			<AppBar

@@ -16,6 +16,7 @@ import { Auth } from './auth';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
 
+
 const jss = create({
 	...jssPreset(),
 	plugins: [...jssPreset().plugins, jssExtend(), rtl()],
@@ -38,7 +39,9 @@ const App = () => {
 							<Router history={history}>
 								<FuseAuthorization>
 									<FuseTheme>
+								
 										<FuseLayout />
+									
 									</FuseTheme>
 								</FuseAuthorization>
 							</Router>
