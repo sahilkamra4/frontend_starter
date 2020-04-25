@@ -8,13 +8,14 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { create } from 'jss';
 import jssExtend from 'jss-plugin-extend';
 import rtl from 'jss-rtl';
-import React from 'react';
+import React,{useState} from 'react';
 import Provider from 'react-redux/es/components/Provider';
 import { Router } from 'react-router-dom';
 import AppContext from './AppContext';
 import { Auth } from './auth';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
+// import Rollbar from "rollbar";
 
 
 const jss = create({
@@ -26,6 +27,9 @@ const jss = create({
 const generateClassName = createGenerateClassName();
 
 const App = () => {
+
+	
+
 	return (
 		<AppContext.Provider
 			value={{

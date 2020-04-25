@@ -11,6 +11,8 @@ const useButtonHandle =({props,dateState,scheduledTweets,dialogstate,tweetState}
     const [open, setOpen] = useState(false);
     const [imageTempUrl,setTempUrl]=useState("")
     const [isButtonDisabled,setIsButtonDisabled]=useState(true)
+    const [displayEditTweet,setDisplayEditTweet]=useState('')
+
 
 const randomFunc =()=>{
     console.log("Rando")
@@ -74,6 +76,14 @@ const setTweetWrapper=(event,index)=>{
     }
 
 }
+const displayEditDate=()=>{
+	props.displayDate()
+}
+
+const displayEdit=()=>{
+    console.log("Element is focussed")
+    setDisplayEditTweet("")
+}
 
 const testUpload=async ()=>{
 	// const fd=new FormData()
@@ -127,7 +137,10 @@ const testUpload=async ()=>{
         setTweetWrapper,
         isButtonDisabled,
         setIsButtonDisabled,
-        testUpload
+        testUpload,
+        displayEditDate,
+        displayEdit,
+        displayEditTweet
     }
 
 

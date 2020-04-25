@@ -185,7 +185,7 @@ function getSteps() {
 function ExamplePage(props) {
 	const classes = useStyles(props);
 	const { t } = useTranslation('examplePage');
-	const [displayEditTweet,setDisplayEditTweet]=useState('')
+	// const [displayEditTweet,setDisplayEditTweet]=useState('')
 	const dispatch = useDispatch();
 	const dialogstate = useSelector((state) => state);
 	const inputFile = useRef(null) 
@@ -198,7 +198,10 @@ function ExamplePage(props) {
 	// const [editOpen,setEditOpen]=useState(false)
 	// const [editTweetIndex,setEditTweetIndex]=useState(0)
 
-
+	// Rollbar.debug("loaded example")
+	const rollbar=window.Rollbar
+	console.log(rollbar)
+	rollbar.debug("Reached example page no error")
 
 	const {
 		randomFunc,
@@ -212,7 +215,10 @@ function ExamplePage(props) {
         setTweetWrapper,
         isButtonDisabled,
 		setIsButtonDisabled,
-		testUpload
+		testUpload,
+		displayEditDate,
+		displayEdit,
+		displayEditTweet
 	}=useButtonHandle({props,dateState,scheduledTweets,dialogstate,tweetState})
 
 	const {
@@ -253,10 +259,10 @@ function ExamplePage(props) {
 		props.addSubtweet(index)
 	}
 
-	const displayEdit=()=>{
-		console.log("Element is focussed")
-		setDisplayEditTweet("")
-	}
+	// const displayEdit=()=>{
+	// 	console.log("Element is focussed")
+	// 	setDisplayEditTweet("")
+	// }
 	const testfunc=()=>{
 		props.showMessage({message: 'Tweet Scheduled Successfully',autoHideDuration:2000,variant:'success'})
 
@@ -281,9 +287,9 @@ const handleNext = () => {
   const handleReset = () => {
     setActiveStep(0);
   };
-  const displayEditDate=()=>{
-	props.displayDate()
-}
+//   const displayEditDate=()=>{
+// 	props.displayDate()
+// }
 
 	useEffect(()=>{
 		// firebase.getRedirectCode()
@@ -662,8 +668,9 @@ const handleNext = () => {
 				</Grid>
 
 				<Grid	item lg={10} md={10} sm={10} xs={10} >
-				<Stepper activeStep={activeStep} orientation="vertical">
-						{value.tweet.map((data, index) => (
+				{value.tweet.length != 1 ? <Stepper activeStep={activeStep} orientation="vertical">
+					
+						{ value.tweet.map((data, index) => (
 						<Step key={index} active={true}>
 							<StepLabel></StepLabel>
 							<StepContent>
@@ -674,7 +681,13 @@ const handleNext = () => {
 							</StepContent>
 						</Step>
 						))}
-					</Stepper>
+				
+					</Stepper>:<Box>
+							<Typography>
+							{value.tweet[0].status}
+							</Typography>
+						
+						</Box>}
 
 				</Grid>
 
