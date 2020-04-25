@@ -37,6 +37,7 @@ class FirebaseService {
 			return;
 		}
 
+		this.timestamp=firebase.firestore.Timestamp
 		firebase.initializeApp(config);
 		this.fieldValue = firebase.firestore.FieldValue;
 		this.db = firebase.firestore();
@@ -46,7 +47,7 @@ class FirebaseService {
 		console.log(firebase.app().name)
 		this.provider = new firebase.auth.TwitterAuthProvider();
 		// console.log(firebase.auth().currentUser().getIdToken());
-
+		// this.allScheduledTweets=firebase.firestore().doc('scheduledTweets')
 		success(true);
 	}
 
@@ -54,6 +55,7 @@ class FirebaseService {
 	user = uid => this.db.doc(`users/${uid}`);
 	// users = () => this.db.collection('users');
 	tweet = tweetid =>this.db.doc(`scheduledTweets/${tweetid}`)
+	
 
 	getUserData = userId => {
 		if (!firebase.apps.length) {
@@ -287,6 +289,31 @@ class FirebaseService {
 			resolve("done")
 		})
 		
+	}
+
+	getScheduledTweets=(user_id,tweet_id)=>{
+		var allScheduledTweets=[]
+		return new Promise((resolve,reject)=>{
+			this.db.collection('scheduledTweets').where('user_id','==',user_id).get()
+			.then(snapshot => {
+				if (snapshot.empty) {
+				  console.log('No matching documents.');
+				  return;
+				}  
+			
+				snapshot.forEach(doc => {
+				  console.log(doc.id, '=>', doc.data());
+				
+				  allScheduledTweets.push(doc.data())
+				});
+				resolve(allScheduledTweets)
+			  })
+			  .catch(err => {
+				console.log('Error getting documents', err);
+				reject("error getting documents")
+			  })
+
+		})
 	}
 
 }

@@ -34,6 +34,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {  KeyboardDateTimePicker } from "@material-ui/pickers";
 import moment from 'moment'
 import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+import CardMedia from '@material-ui/core/CardMedia';
+import { CardActionArea } from '@material-ui/core';
+
+
 var currentDate=moment().format("MMM DD, hh:mm a")
 const useStyles = makeStyles(theme => ({
 	layoutRoot: {
@@ -103,7 +108,31 @@ const useStyles = makeStyles(theme => ({
 	  addMargin:{
 		  marginTop:"25px"
 	  },
+	  iconButtonHover:{
+		"&:hover":{
+			background:"#FFF"
+		},
+		"&::before":{
+			backgroundColor: "white",
+			content: '""',
+			display:"block",
+			height: "10px",
+			position: "absolute",
+			width:"10px",
+			marginLeft:"69px",
+			marginTop:"0px",
+			top:"-3px"
+			
+		}
+
+	  },
 	  
+	  actionArea:{
+		  '&:hover $focusHighlight':{
+			  opacity:0,
+		  }
+	  },
+	  focusHighlight: {}
 		 
 		 
 	  
@@ -118,7 +147,7 @@ function TweetModal(props) {
 	const inputFile = useRef(null) 
 	const [displayDateTimePicker,setDisplayDateTimePicker]=useState(true)
 	const [postTime,setPostTime]=useState(currentDate)
-	const tweetState=useSelector(({customReducers})=>customReducers.upload.tweet)
+	const tweetState=useSelector(({customReducers})=>customReducers.upload)
 	const dateState=useSelector(({customReducers})=>customReducers.displayDate.open)
 
 	const uploadImage=()=>{
@@ -168,7 +197,7 @@ function TweetModal(props) {
 		setDisplayEditTweet("")
 	}
 	const displayEditDate=()=>{
-		props.displayEditDate()
+		props.displayDate()
 	}
 
 	const testUpload=()=>{
@@ -229,7 +258,7 @@ console.log(props.currentState.customReducers.upload.tweet)
 		  >
 
 			
-		 {tweetState.map((value,index)=>
+		 {tweetState.tweet.map((value,index)=>
 	
 					<Card key={index}
 					 style={{
@@ -321,6 +350,50 @@ console.log(props.currentState.customReducers.upload.tweet)
 						</Box>
 
 					</Box>
+					<Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
+					
+					<Icon 
+					component="button"
+					onClick={()=>console.log("clicked crooss")}
+					style={{marginLeft:"67px",position:"relative",
+					marginBottom:"",top:"-5px",marginTop:0,cursor:"pointer",zIndex:8}}
+					>highlight_off
+					</Icon>
+						<CardActionArea
+						style={{height:"70px",
+						background:"",
+						marginTop:"-20px",
+					
+						border:"1px dashed black",
+
+						width:"80px"}}
+						classes={{
+							root: classes.actionArea,
+							focusHighlight: classes.focusHighlight
+						}}
+						className={classes.iconButtonHover}
+						>							
+						<CardMedia
+						component="img"
+						height="140"
+						className={classes.media}
+						src="https://firebasestorage.googleapis.com/v0/b/tweetking-604eb.appspot.com/o/fBY9qZ11KaZumUMbemK6J3uAizF2%2F73292290-5201-460d-b266-4077816b449c%2FCaesars-Civil-War.jpg.jpg?alt=media&token=be19cd98-8d01-41cb-b507-4ec6f4370807"
+						title="Contemplative Reptile"
+						style={{
+						height:"50px",
+						margin:"auto",
+						marginTop:"7px",
+						// marginLeft:"auto",
+						// marginBottom:"15px",
+						// marginTop:"2px",
+						width:"80%",
+						marginBottom:"10px"}}
+						/>
+						</CardActionArea>
+						   	
+						</Box>
+
+
 					
 							
 							<AppBar
@@ -369,9 +442,9 @@ console.log(props.currentState.customReducers.upload.tweet)
 					</Card>	
 					<Grid container >
 
-						<Grid item lg={6} md={6} style={{display:"flex",alignItems:"center"}}>
+						<Grid item lg={6} md={6} style={{display:"flex",alignItems:"center",}}>
 
-				{dateState ? <KeyboardDateTimePicker
+				{dateState ? <div style={{marginLeft:"40px"}}><KeyboardDateTimePicker
 
 								variant="inline"
 								ampm={false}
@@ -384,8 +457,8 @@ console.log(props.currentState.customReducers.upload.tweet)
 								disablePast
 								format="DD/MM/YYYY HH:mm"
 								style={{marginTop:"10px",marginLeft:"15px"}}
-								/>:<div style={{marginLeft:"15px"}}>{postTime}</div>}			
-								{dateState ? null:<IconButton onClick={()=>props.displayEditDate()}><EditIcon/></IconButton>}	
+								/></div>:<div style={{marginLeft:"50px"}}>{postTime}</div>}			
+								{dateState ? <IconButton onClick={props.hideEditDate}><DoneIcon /></IconButton>:<IconButton onClick={displayEditDate}><EditIcon/></IconButton>}	
 											</Grid>
 					<Grid item lg={3} 
 					md={3}
@@ -483,6 +556,7 @@ function mapDispatchToProps(dispatch) {
 			addSubtweet:customactions.addSubtweet,
 			setTweet:customactions.setTweet,
 			displayDate:customactions.displayEditDate,
+			hideEditDate:customactions.hideEditDate,
 			// getAuthFunc:userActions.getAuthFunction
 		},
 		dispatch

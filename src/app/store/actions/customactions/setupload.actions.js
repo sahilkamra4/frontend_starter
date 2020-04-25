@@ -7,6 +7,9 @@ export const SET_TWEET='SET_TWEET'
 export const SET_DOWNLOAD_URL='SET_DOWNLOAD_URL'
 export const SAVE_TWEET='SAVE_TWEET'
 export const RESET_STATE='RESET_STATE'
+export const HANDLE_DATE_CHANGE='HANDLE_DATE_CHANGE'
+
+
 
 export function setUpload(image,index) {
 	return {
@@ -59,5 +62,12 @@ export function saveTweet(tweet_id,user_id){
 export function resetState(){
 	return {
 		type:"RESET_STATE"
+	}
+}
+
+export function handleDateChange(event){
+	return {
+		type:"HANDLE_DATE_CHANGE",
+		event:event
 	}
 }

@@ -38,7 +38,12 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {uuid} from 'uuidv4'
-
+import {  KeyboardDateTimePicker } from "@material-ui/pickers";
+import moment from 'moment'
+import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+import CardMedia from '@material-ui/core/CardMedia';
+import { CardActionArea } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
 	layoutRoot: {
@@ -111,7 +116,31 @@ const useStyles = makeStyles(theme => ({
 				minHeight:"10vh",
 				width:"90%",
 				borderRadius:"15px"
-	  }
+	  },
+	  iconButtonHover:{
+		"&:hover":{
+			background:"#FFF"
+		},
+		"&::before":{
+			backgroundColor: "white",
+			content: '""',
+			display:"block",
+			height: "10px",
+			position: "absolute",
+			width:"10px",
+			marginLeft:"69px",
+			marginTop:"0px",
+			top:"-3px"
+			
+		}
+
+	  },
+	  actionArea:{
+		  '&:hover $focusHighlight':{
+			  opacity:0,
+		  }
+	  },
+	  focusHighlight: {}
 	  
 }));
 
@@ -139,7 +168,10 @@ function getSteps() {
   }
   
 
+  var currentDate=moment().format("MMM DD, hh:mm a")
+  
 
+	  
 function ExamplePage(props) {
 	const classes = useStyles(props);
 	const { t } = useTranslation('examplePage');
@@ -147,7 +179,14 @@ function ExamplePage(props) {
 	const dispatch = useDispatch();
 	const dialogstate = useSelector((state) => state);
 	const inputFile = useRef(null) 
-	const tweetState=useSelector(({customReducers})=>customReducers.upload.tweet)
+	const tweetState=useSelector(({customReducers})=>customReducers.upload)
+	const dateState=useSelector(({customReducers})=>customReducers.displayDate.open)
+	const scheduledTweets=useSelector(({customReducers})=>customReducers.scheduledTweets)
+	const [loading,setLoading]=useState(true)
+	console.log(scheduledTweets)
+	// const [postTime,setPostTime]=useState(currentDate)
+	console.log(tweetState)
+	const postTime=tweetState.post_time_formatted
 	const uploadImage=()=>{
 		console.log("Uploading... file...")
 		inputFile.current.click()
@@ -162,6 +201,10 @@ function ExamplePage(props) {
 	//   alert("Are you sure you want to close the modal")
     setOpen(false);
   };
+
+  const handleDateChange=(event)=>{
+	props.handleDateChange(event)
+  }
 
   console.log(tweetState)
   console.log(dialogstate)
@@ -191,6 +234,7 @@ function ExamplePage(props) {
 		props.setUpload(event.target.files[0],index)
 		}
 	}
+	
 
 	const addTweet = (index) =>{
 		console.log(index)
@@ -215,23 +259,35 @@ function ExamplePage(props) {
 	// fd.append('ppgrade',props.customReducers.upload.file,props.customReducers.upload.file.name)
 	console.log("Example test upload working")
 	let tweet_id=uuid()
-	//   function for sending this to send it to firestore
-	for (let item in tweetState){
-		if(tweetState[item].tweet_image && tweetState[item].tweet_image != ""){
+	//   send images to storage
+	for (let item in tweetState.tweet){
+		if(tweetState.tweet[item].tweet_image && tweetState.tweet[item].tweet_image != ""){
 		console.log(tweet_id)
-		var image_ref=firebase.getRootRef().child(`${dialogstate.auth.user.uid}/${tweet_id}/${tweetState[item].tweet_image.name}.jpg`)
-		let snapshot= await image_ref.put(tweetState[item].tweet_image).catch(err=>console.log(err))
+		var image_ref=firebase.getRootRef().child(`${dialogstate.auth.user.uid}/${tweet_id}/${tweetState.tweet[item].tweet_image.name}.jpg`)
+		let snapshot= await image_ref.put(tweetState.tweet[item].tweet_image).catch(err=>console.log(err))
 		console.log('Uploaded a blob or file!');
 		let downloadURL=await snapshot.ref.getDownloadURL().catch(err=>console.log(err))
 		console.log("File available at", downloadURL);
 		props.setDownloadUrl(downloadURL,item)
-		
+		// tweetState.tweet[item].image_url=downloadURL
 		}
 		  
 	}
 	let user_id=dialogstate.auth.user.uid
 	console.log(user_id)
 	await props.saveTweet(tweet_id,user_id)
+
+	if(!tweetState.post_time_database){
+		tweetState.post_time_database=firebase.timestamp.fromDate(moment(tweetState.post_time).toDate())
+
+		}
+	tweetState.tweet_id=tweet_id
+	tweetState.user_id=dialogstate.auth.user.uid
+	for(let i in tweetState.tweet){
+			tweetState.tweet[i].tweet_image=""
+		}
+	await firebase.saveTweet(tweetState,tweet_id).catch(err=>console.log(err))
+	props.resetState()
 	props.showMessage({message: 'Tweet Scheduled Successfully',autoHideDuration:2000,variant:"success"})
 	console.log("tweet saved")
 }
@@ -253,14 +309,28 @@ const handleNext = () => {
   const handleReset = () => {
     setActiveStep(0);
   };
-
+  const displayEditDate=()=>{
+	props.displayDate()
+}
 
 	useEffect(()=>{
 		// firebase.getRedirectCode()
 	// var result=	firebase.getUserData(uid)
 	// console.log(result)
+	// getScheduledPostData()
+	const getScheduledPostData=async ()=>{
+		var data=await firebase.getScheduledTweets(dialogstate.auth.user.uid).catch(err=>console.log(err))
+		props.setScheduledTweets(data)
+		console.log(data)
+		setLoading(false)
+			return
+		}
+		getScheduledPostData()
+	// var data=await firebase.getScheduledTweets(dialogstate.auth.user.uid).catch(err=>console.log(err))
+	// props.setScheduledTweets(data)
+	
 
-	}	)
+	},[])
 	return (
 		<FusePageSimple
 			classes={{
@@ -286,6 +356,7 @@ const handleNext = () => {
 				minHeight:'91.9vh'
 		
 				}}>
+					{loading ? <div>loading....</div>:
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
 						<Grid item lg={12} md={12} sm={12} xs={12}>
 					<Typography>Scheduled Tweets </Typography>
@@ -337,7 +408,7 @@ const handleNext = () => {
 							}
 						/>
 						</Box>
-						<Box style={{width:"100%",flexGrow:4}} >
+						<Box style={{width:"100%",flexGrow:4,minHeight:""}} >
 						<Input
 						
 						onFocus={displayEdit}
@@ -353,7 +424,7 @@ const handleNext = () => {
 						rowsMax="8"
 						margin="none"
 						disableUnderline
-						value={tweetState[0].status}
+						value={tweetState.tweet[0].status}
 					
 						// classes={{adornedStart: {
 						// 	marginTop:0,
@@ -362,6 +433,7 @@ const handleNext = () => {
 					/>
 					
 						</Box>
+					
 						<Box 
 						style={{
 						
@@ -384,7 +456,50 @@ const handleNext = () => {
 
 					</Box>
 					
+					<Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
 					
+					<Icon 
+					component="button"
+					onClick={()=>console.log("clicked crooss")}
+					style={{marginLeft:"67px",position:"relative",
+					marginBottom:"",top:"-5px",marginTop:0,cursor:"pointer",zIndex:8}}
+					>highlight_off
+					</Icon>
+						<CardActionArea
+						disableTouchRipple
+						style={{height:"70px",
+						background:"",
+						marginTop:"-20px",
+					
+						border:"1px dashed black",
+
+						width:"80px"}}
+						classes={{
+							root: classes.actionArea,
+							focusHighlight: classes.focusHighlight
+						}}
+						className={classes.iconButtonHover}
+						>							
+						<CardMedia
+						component="img"
+						height="140"
+						className={classes.media}
+						src="https://firebasestorage.googleapis.com/v0/b/tweetking-604eb.appspot.com/o/fBY9qZ11KaZumUMbemK6J3uAizF2%2F73292290-5201-460d-b266-4077816b449c%2FCaesars-Civil-War.jpg.jpg?alt=media&token=be19cd98-8d01-41cb-b507-4ec6f4370807"
+						title="Contemplative Reptile"
+						style={{
+						height:"50px",
+						margin:"auto",
+						marginTop:"7px",
+						// marginLeft:"auto",
+						// marginBottom:"15px",
+						// marginTop:"2px",
+						width:"80%",
+						marginBottom:"10px"}}
+						/>
+						</CardActionArea>
+						   	
+						</Box>
+
 					<AppBar
 								className="card-footer flex flex-row border-t-1"
 								position="static"
@@ -393,6 +508,7 @@ const handleNext = () => {
 								style={{
 								display:`${displayEditTweet}`,
 								// borderStyle:"none",
+								marginTop:"5px",
 								background:"white",
 								// borderTop:"1px solid #20c997"
 
@@ -409,7 +525,7 @@ const handleNext = () => {
 									<input style={{display:"none"}} multiple ref={inputFile} type="file" accept="image/*" onChange={(event)=>imageSelectedHandler(event,0)}>
 									</input>
 									
-								
+									
 								</div>
 
 								<div className="p-8">
@@ -443,8 +559,29 @@ const handleNext = () => {
 									</Button>
 								
 								</div>
-							</AppBar>
 							
+							</AppBar>
+							<Box style={{display:"flex" ,background:"",alignItems:"center"}}>
+								<Box style={{background:'',marginBottom:"10px",marginLeft:"10px"}}>
+								{dateState ? <div style={{marginLeft:""}}><KeyboardDateTimePicker
+										variant="inline"
+										ampm={false}
+										// label="With keyboard"
+										inputVariant="outlined"
+										autoOk={true}
+										value={tweetState.post_time}
+										onChange={handleDateChange}
+										onError={console.log}
+										style={{marginLeft:"15px"}}
+										disablePast
+										format="DD/MM/YYYY HH:mm"
+										style={{marginTop:"10px",marginLeft:"15px"}}
+										/></div>:<div style={{marginLeft:""}}>Time: {postTime}</div>}	
+									</Box>
+									<Box style={{background:""}}>
+									{dateState ? <IconButton onClick={props.hideEditDate}><DoneIcon /></IconButton>:<IconButton onClick={displayEditDate}><EditIcon/></IconButton>}	
+									</Box>
+									</Box>
 									</Card>	
 							
 						
@@ -465,90 +602,105 @@ const handleNext = () => {
 
 				</Grid>
 
-			<Grid item lg={10} md={10} sm={12} xs={12} style={{display:"flex",justifyContent:"center"}}>
-				<Card elevation={0} 
-					onClick={()=>console.log("Yayy")}
-					// component="button"
-					className={classes.scheduledTweetCard}
-					style={{borderLeft:"4px solid #20c997"}}
-					>
-					<Grid container>
-					<Grid item lg={2} md={2} sm={2} xs={2} 
-					style=
-					{{
-					display:"flex",
-					alignItems:"center"
-					}}
-					>
+			
 
-					
-						{/* <Typography component="h2" 
-						style={{
+				{scheduledTweets.map((value,index)=>
+				<Grid item key={index} lg={10} md={10} sm={12} xs={12} 
+				style={{display:"flex",justifyContent:"center",marginTop:"15px"}}>
+
+				<Card elevation={0}
+		
+				onClick={()=>console.log("Yayy")}
+				// component="button"
+				className={classes.scheduledTweetCard}
+				style={{borderLeft:"4px solid #20c997"}}
+				>
+				<Grid container>
+				<Grid item lg={2} md={2} sm={2} xs={2} 
+				style=
+				{{
+				display:"flex",
+				alignItems:"center"
+				}}
+				>
+
+				
+					{/* <Typography component="h2" 
+					style={{
+					marginLeft:"15px",
+					marginTop:"25%",
+					fontSize:"10px"
+					}}>
+						Scheduled For
+					</Typography>
+			 */}
+					<Typography component="h4"
+					style={{
 						marginLeft:"15px",
-						marginTop:"25%",
-						fontSize:"10px"
-						}}>
-							Scheduled For
-						</Typography>
-				 */}
-						<Typography component="h4"
-						style={{
-							marginLeft:"15px",
-							fontSize:"20px",
-							
-						}}
-							
-						>
-							24 , Jan
-							<br></br>
-							9:15 am
-						</Typography>
-						{/* <Typography component="h4"
-						style={{
-							marginLeft:"15px",
+						fontSize:"20px",
+						
+					}}
+						
+					>
+						{value.post_time_formatted}
+						<br></br>
+						{/* {value.post_time_formatted} */}
+					</Typography>
+					{/* <Typography component="h4"
+					style={{
+						marginLeft:"15px",
 
-						}}
-							
-						>
-							9:15 am
-						</Typography> */}
+					}}
+						
+					>
+						9:15 am
+					</Typography> */}
 
 
-					</Grid>
-
-					<Grid	item lg={10} md={10} sm={10} xs={10}>
-					<Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={label} active={true}>
-            <StepLabel></StepLabel>
-            <StepContent>
-              <Typography>{getStepContent(index)}</Typography>
-              <div className={classes.actionsContainer}>
-               
-              </div>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-
-					</Grid>
-
-
-
-					<Grid	item lg={2} md={2} sm={2} xs={2}>
-						<Button variant="contained">
-						Edit Tweet
-						</Button>
-
-					</Grid>
-
-
-					</Grid>
-					
-					
-					</Card>
-			</Grid>
 				</Grid>
+
+				<Grid	item lg={10} md={10} sm={10} xs={10}>
+				<Stepper activeStep={activeStep} orientation="vertical">
+						{value.tweet.map((data, index) => (
+						<Step key={index} active={true}>
+							<StepLabel></StepLabel>
+							<StepContent>
+							<Typography>{data.status}</Typography>
+							<div className={classes.actionsContainer}>
+							
+							</div>
+							</StepContent>
+						</Step>
+						))}
+					</Stepper>
+
+				</Grid>
+
+
+
+				<Grid	item lg={2} md={2} sm={2} xs={2}>
+					<Button variant="contained">
+					Edit Tweet
+					</Button>
+
+				</Grid>
+
+
+				</Grid>
+				
+				
+				</Card>
+	
+				</Grid>
+
+				)}
+
+		
+		
+			
+				</Grid>
+				
+			}
 				</div>
 
 
@@ -570,6 +722,12 @@ function mapDispatchToProps(dispatch) {
 			resetState:customactions.resetState,
 			saveTweet:customactions.saveTweet,
 			showMessage:Actions.showMessage,
+			displayDate:customactions.displayEditDate,
+			hideEditDate:customactions.hideEditDate,
+			handleDateChange:customactions.handleDateChange,
+			setScheduledTweets:customactions.setScheduledTweets,
+
+
 			// getAuthFunc:userActions.getAuthFunction
 		},
 		dispatch

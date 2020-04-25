@@ -1,5 +1,5 @@
 import { actions } from "react-table"
-import { DISPLAY_EDIT_DATE } from "app/store/actions/customactions/date.actions"
+import { DISPLAY_EDIT_DATE, HIDE_EDIT_DATE } from "app/store/actions/customactions/date.actions"
 
 const initialState={
     open:false
@@ -13,9 +13,13 @@ const displayDate=(state=initialState,action)=>{
                 ...initialState,
                 open:true
             }
-        default:
+        case HIDE_EDIT_DATE:
             return {
                 ...initialState
+            }
+        default:
+            return {
+                ...state
             }
     }
     

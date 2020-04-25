@@ -7,3 +7,9 @@ return {
     type:DISPLAY_EDIT_DATE
 }
 }
+
+export function hideEditDate(){
+    return {
+        type:HIDE_EDIT_DATE
+    }
+}
