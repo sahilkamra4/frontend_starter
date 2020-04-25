@@ -155,8 +155,10 @@ function TweetModal(props) {
 	const [postTime,setPostTime]=useState(currentDate)
 	const tweetState=useSelector(({customReducers})=>customReducers.upload)
 	const dateState=useSelector(({customReducers})=>customReducers.displayDate.open)
-
-
+    const scheduledTweetState=useSelector(({customReducers})=>customReducers.scheduledTweets)
+console.log(scheduledTweetState)
+console.log(props.editTweetIndex)
+console.log(scheduledTweetState[props.editTweetIndex])
 	const uploadImage=()=>{
 		console.log("Uploading... file...")
 		inputFile.current.click()
@@ -276,7 +278,7 @@ console.log(props.currentState.customReducers.upload.tweet)
 		  >
 
 			
-		 {tweetState.tweet.map((value,index)=>
+		 {scheduledTweetState[props.editTweetIndex].tweet.map((value,index)=>
 	
 					<Card key={index}
 					 style={{
@@ -370,7 +372,7 @@ console.log(props.currentState.customReducers.upload.tweet)
 
 					</Box>
 				
-					{tweetState.tweet[0].tweet_image ? <Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
+					{scheduledTweetState[props.editTweetIndex].tweet[0].tweet_image ? <Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
 					
 					<Icon 
 					component="button"
@@ -445,10 +447,10 @@ console.log(props.currentState.customReducers.upload.tweet)
 								
 								</div>
 								<div className="flex items-center" style={{marginRight:"10px"}}>
-							<Typography>{tweetState.tweet[index].status.length}</Typography>
+							<Typography>{scheduledTweetState[props.editTweetIndex].tweet[index].status.length}</Typography>
 								</div>
 								<div className="flex items-center"  style={{marginRight:"10px"}}>
-								<Typography>{index+1+"/"+tweetState.tweet.length}</Typography>
+								<Typography>{index+1+"/"+scheduledTweetState[props.editTweetIndex].tweet.length}</Typography>
 								</div>
 								<div className="p-8">
 								

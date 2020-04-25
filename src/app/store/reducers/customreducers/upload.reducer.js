@@ -154,7 +154,28 @@ const upload = (state=initialState,action)=>{
         return{
             ...newTweetState
         }
+        case customActions.REMOVE_TEMP_IMAGE:
+        let freshTweetState={...state}
+        freshTweetState.tweet[action.index].tweet_image=""    
+        return{
+            ...freshTweetState
+            }
+        case customActions.REMOVE_SUBTWEET:
+            let myNewState={...state}
+        if(state.tweet.length==1){
+            
+        }
+        else{
+            console.log(myNewState)
+            console.log(action.index)
+            myNewState.tweet.splice(action.index,1)
+            console.log(myNewState)
 
+        }
+          
+            return {
+                ...myNewState
+            }
 
         default:{
                 console.log("This is happening")

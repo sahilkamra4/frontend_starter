@@ -8,8 +8,8 @@ export const SET_DOWNLOAD_URL='SET_DOWNLOAD_URL'
 export const SAVE_TWEET='SAVE_TWEET'
 export const RESET_STATE='RESET_STATE'
 export const HANDLE_DATE_CHANGE='HANDLE_DATE_CHANGE'
-
-
+export const REMOVE_TEMP_IMAGE='REMOVE_TEMP_IMAGE'
+export const REMOVE_SUBTWEET='REMOVE_SUBTWEET'
 
 export function setUpload(image,index) {
 	return {
@@ -69,5 +69,19 @@ export function handleDateChange(event){
 	return {
 		type:"HANDLE_DATE_CHANGE",
 		event:event
+	}
+}
+
+export function removeUploadImage(index){
+	return {
+		type:"REMOVE_TEMP_IMAGE",
+		index:index
+	}
+}
+
+export function removeSubTweet(index){
+	return {
+		type:"REMOVE_SUBTWEET",
+		index:index
 	}
 }

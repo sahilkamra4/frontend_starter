@@ -44,6 +44,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CardMedia from '@material-ui/core/CardMedia';
 import { CardActionArea } from '@material-ui/core';
+import EditTweetModal from './EditTweetModal'
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import useButtonHandle from './useButtonHandle'
+import useButtonEditHandle from './useButtonEditHandle'
+
 
 const useStyles = makeStyles(theme => ({
 	layoutRoot: {
@@ -140,7 +145,12 @@ const useStyles = makeStyles(theme => ({
 			  opacity:0,
 		  }
 	  },
-	  focusHighlight: {}
+	  focusHighlight: {},
+	  buttonDisabled:{
+		color:"#FFF !important",
+		opacity:0.5
+	  }
+	  
 	  
 }));
 
@@ -183,6 +193,40 @@ function ExamplePage(props) {
 	const dateState=useSelector(({customReducers})=>customReducers.displayDate.open)
 	const scheduledTweets=useSelector(({customReducers})=>customReducers.scheduledTweets)
 	const [loading,setLoading]=useState(true)
+	// const [imageTempUrl,setTempUrl]=useState("")
+	// const [isButtonDisabled,setIsButtonDisabled]=useState(true)
+	// const [editOpen,setEditOpen]=useState(false)
+	// const [editTweetIndex,setEditTweetIndex]=useState(0)
+
+
+
+	const {
+		randomFunc,
+		handleClose,
+		handleOpen,
+		open,
+		handleDateChange,
+		tempImageRemove,
+		imageSelectedHandler,
+        imageTempUrl,
+        setTweetWrapper,
+        isButtonDisabled,
+		setIsButtonDisabled,
+		testUpload
+	}=useButtonHandle({props,dateState,scheduledTweets,dialogstate,tweetState})
+
+	const {
+		openEditModal,
+        closeEditModal,
+        editOpen,
+        editTweetIndex
+	}
+	= useButtonEditHandle({props,dateState,scheduledTweets,dialogstate,tweetState})
+
+
+
+	randomFunc()
+
 	console.log(scheduledTweets)
 	// const [postTime,setPostTime]=useState(currentDate)
 	console.log(tweetState)
@@ -191,58 +235,22 @@ function ExamplePage(props) {
 		console.log("Uploading... file...")
 		inputFile.current.click()
 	}
-	const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-	//   alert("Are you sure you want to close the modal")
-    setOpen(false);
-  };
 
-  const handleDateChange=(event)=>{
-	props.handleDateChange(event)
-  }
+
+
 
   console.log(tweetState)
   console.log(dialogstate)
 
 	console.log(props)
 
-	// this function adds image to redux
-	const imageSelectedHandler=(event,index)=>{
-		var files= event.target.files
-		if(files.length >4){
-			console.log("Cannt upload more than 4 files")
-		}
-		for(let i=0;i<files.length;i++){
-
-		}
-		console.log(event.target.files[0])
-		console.log(event.target.files[0].type)
-		
-		if(event.target.files[0].type !='image/png'  && event.target.files[0].type != 'image/jpeg' ){
-			console.log("unsupported file type")
-			// if(ev)
-
-			console.log(event.target.files[0].type != 'image/jpeg')
-			console.log(event.target.files[0].type !='image/png')
-		}
-		else{
-		props.setUpload(event.target.files[0],index)
-		}
-	}
 	
 
 	const addTweet = (index) =>{
 		console.log(index)
 		props.addSubtweet(index)
-	}
-	const setTweet=(event,index)=>{
-
-		props.setTweet(event.target.value,index)
 	}
 
 	const displayEdit=()=>{
@@ -254,43 +262,7 @@ function ExamplePage(props) {
 
 	}
 
-	const testUpload=async ()=>{
-	// const fd=new FormData()
-	// fd.append('ppgrade',props.customReducers.upload.file,props.customReducers.upload.file.name)
-	console.log("Example test upload working")
-	let tweet_id=uuid()
-	//   send images to storage
-	for (let item in tweetState.tweet){
-		if(tweetState.tweet[item].tweet_image && tweetState.tweet[item].tweet_image != ""){
-		console.log(tweet_id)
-		var image_ref=firebase.getRootRef().child(`${dialogstate.auth.user.uid}/${tweet_id}/${tweetState.tweet[item].tweet_image.name}.jpg`)
-		let snapshot= await image_ref.put(tweetState.tweet[item].tweet_image).catch(err=>console.log(err))
-		console.log('Uploaded a blob or file!');
-		let downloadURL=await snapshot.ref.getDownloadURL().catch(err=>console.log(err))
-		console.log("File available at", downloadURL);
-		props.setDownloadUrl(downloadURL,item)
-		// tweetState.tweet[item].image_url=downloadURL
-		}
-		  
-	}
-	let user_id=dialogstate.auth.user.uid
-	console.log(user_id)
-	await props.saveTweet(tweet_id,user_id)
 
-	if(!tweetState.post_time_database){
-		tweetState.post_time_database=firebase.timestamp.fromDate(moment(tweetState.post_time).toDate())
-
-		}
-	tweetState.tweet_id=tweet_id
-	tweetState.user_id=dialogstate.auth.user.uid
-	for(let i in tweetState.tweet){
-			tweetState.tweet[i].tweet_image=""
-		}
-	await firebase.saveTweet(tweetState,tweet_id).catch(err=>console.log(err))
-	props.resetState()
-	props.showMessage({message: 'Tweet Scheduled Successfully',autoHideDuration:2000,variant:"success"})
-	console.log("tweet saved")
-}
 console.log(props.currentState.customReducers.upload.tweet)
 
 const [activeStep, setActiveStep] = React.useState(0);
@@ -413,7 +385,7 @@ const handleNext = () => {
 						
 						onFocus={displayEdit}
 						className="p-16 w-full"
-						onChange={(event)=>setTweet(event,0)}
+						onChange={(event)=>setTweetWrapper(event,0)}
 						style={{borderRadius:"25px"
 						// ,marginTop:"-50px"
 					}}
@@ -450,17 +422,16 @@ const handleNext = () => {
 						style={{
 							// background:"pink"
 						}} size="small">
-						<DeleteIcon  />
+						{/* <DeleteIcon  /> */}
 						</IconButton>
 						</Box>
 
 					</Box>
-					
-					<Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
+					{tweetState.tweet[0].tweet_image ? <Box style={{width:"100%",height:"80px",marginLeft:"10px",background:""}}>
 					
 					<Icon 
 					component="button"
-					onClick={()=>console.log("clicked crooss")}
+					onClick={(event)=>tempImageRemove(event,0)}
 					style={{marginLeft:"67px",position:"relative",
 					marginBottom:"",top:"-5px",marginTop:0,cursor:"pointer",zIndex:8}}
 					>highlight_off
@@ -484,8 +455,8 @@ const handleNext = () => {
 						component="img"
 						height="140"
 						className={classes.media}
-						src="https://firebasestorage.googleapis.com/v0/b/tweetking-604eb.appspot.com/o/fBY9qZ11KaZumUMbemK6J3uAizF2%2F73292290-5201-460d-b266-4077816b449c%2FCaesars-Civil-War.jpg.jpg?alt=media&token=be19cd98-8d01-41cb-b507-4ec6f4370807"
-						title="Contemplative Reptile"
+						src={imageTempUrl}
+						title=""
 						style={{
 						height:"50px",
 						margin:"auto",
@@ -498,7 +469,8 @@ const handleNext = () => {
 						/>
 						</CardActionArea>
 						   	
-						</Box>
+						</Box>:null}
+					
 
 					<AppBar
 								className="card-footer flex flex-row border-t-1"
@@ -528,7 +500,14 @@ const handleNext = () => {
 									
 								</div>
 
+								<div className="flex items-center" style={{marginRight:"10px"}}>
+								<Typography>{tweetState.tweet[0].status.length}</Typography>
+								</div>
+								<div className="flex items-center" style={{marginRight:"10px"}}>
+								<Typography>{"1"+"/"+tweetState.tweet.length}</Typography>
+								</div>
 								<div className="p-8">
+								
 								<IconButton onClick={handleOpen} style={{textAlign:"right",marginRight:"10px"}} size="small" aria-label="Add location">
 										<Icon style={{background:"",color:"#20c997"}}>circle_add</Icon>
 									</IconButton>
@@ -536,7 +515,7 @@ const handleNext = () => {
 					<Button 
 									
 									variant="contained" 
-									disabled={false}
+									disabled={isButtonDisabled}
 									style={{
 										backgroundImage:"linear-gradient(90deg,#55c3b7 0,#5fd0a5 48%,#66da90 100%)",
 										fontSize:"13px",
@@ -544,13 +523,16 @@ const handleNext = () => {
 										borderRadius:"7px",
 										padding:"9px 24px",
 										textTransform:"none",
-										// opacity:0.5,
+									
+										// color:"green",
+										// fontColor:"#FFF"
 										// width:"70%",
 										// marginTop:"18px",
 										// marginBottom:"18px"
 
 								
 								}} 
+								classes={{'disabled':classes.buttonDisabled}}
 									onClick={testUpload}
 									 color="primary"
 									  size="small"
@@ -593,13 +575,33 @@ const handleNext = () => {
 				
 				<Grid item lg={8} md={8} sm={8} xs={8}>
 			
-				<button type="button" onClick={testfunc}>
-        react-transition-group
-      </button>
-	  
+			
 
-			<TweetModal open={open} testUpload={testUpload} handleClose={handleClose} imageSelectedHandler={imageSelectedHandler} />
+			<TweetModal 
+			open={open} 
+			testUpload={testUpload}
+			 handleClose={handleClose} 
+			 imageSelectedHandler={imageSelectedHandler} 
+			 imageTempUrl={imageTempUrl}
+			 tempImageRemove={tempImageRemove}
+			 isButtonDisabled={isButtonDisabled}
+			 setIsButtonDisabled={setIsButtonDisabled}
+			 setTweetWrapper={setTweetWrapper}
+			 />
+			<EditTweetModal 
+			open={editOpen}
+			testUpload={testUpload}
+			editTweetIndex={editTweetIndex}
+			 handleClose={closeEditModal} 
+			 imageSelectedHandler={imageSelectedHandler} 
+			 imageTempUrl={imageTempUrl}
+			 tempImageRemove={tempImageRemove}
+			 isButtonDisabled={isButtonDisabled}
+			 setIsButtonDisabled={setIsButtonDisabled}
+			 setTweetWrapper={setTweetWrapper}
 
+
+			/>
 				</Grid>
 
 			
@@ -659,7 +661,7 @@ const handleNext = () => {
 
 				</Grid>
 
-				<Grid	item lg={10} md={10} sm={10} xs={10}>
+				<Grid	item lg={10} md={10} sm={10} xs={10} >
 				<Stepper activeStep={activeStep} orientation="vertical">
 						{value.tweet.map((data, index) => (
 						<Step key={index} active={true}>
@@ -678,10 +680,11 @@ const handleNext = () => {
 
 
 
-				<Grid	item lg={2} md={2} sm={2} xs={2}>
-					<Button variant="contained">
-					Edit Tweet
-					</Button>
+				<Grid	item lg={12} md={12} sm={12} xs={12} 
+				style={{display:"flex",background:"",justifyContent:"flex-end"}}>
+					<IconButton onClick={()=>openEditModal(index)}>
+						<EditRoundedIcon />
+					</IconButton>
 
 				</Grid>
 
@@ -726,6 +729,7 @@ function mapDispatchToProps(dispatch) {
 			hideEditDate:customactions.hideEditDate,
 			handleDateChange:customactions.handleDateChange,
 			setScheduledTweets:customactions.setScheduledTweets,
+			removeUploadImage:customactions.removeUploadImage
 
 
 			// getAuthFunc:userActions.getAuthFunction
