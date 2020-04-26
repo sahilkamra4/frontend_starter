@@ -10,7 +10,18 @@ const scheduledTweets =(state=initialState,action)=>{
     case SET_SCHEDULED_TWEETS:
         console.log("Reached scheduled tweets")
         console.log(action.value)
-        var newState=[...action.value]
+
+        // var newState=[...action.value] || [0]
+        var newState=[...action.value] 
+        console.log(newState)
+        if(newState){
+            // newState=[0]
+        }
+        else{
+            newState=initialState
+        }
+
+
         return newState
     default:
         return state

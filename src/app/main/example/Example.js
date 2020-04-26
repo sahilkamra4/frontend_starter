@@ -48,6 +48,7 @@ import EditTweetModal from './EditTweetModal'
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import useButtonHandle from './useButtonHandle'
 import useButtonEditHandle from './useButtonEditHandle'
+var momentZones = require('moment-timezone');
 
 
 const useStyles = makeStyles(theme => ({
@@ -199,9 +200,8 @@ function ExamplePage(props) {
 	// const [editTweetIndex,setEditTweetIndex]=useState(0)
 
 	// Rollbar.debug("loaded example")
-	const rollbar=window.Rollbar
-	console.log(rollbar)
-	rollbar.debug("Reached example page no error")
+	// const rollbar=window.Rollbar
+	
 
 	const {
 		randomFunc,
@@ -222,10 +222,19 @@ function ExamplePage(props) {
 	}=useButtonHandle({props,dateState,scheduledTweets,dialogstate,tweetState})
 
 	const {
-		openEditModal,
+		
+        openEditModal,
         closeEditModal,
         editOpen,
-        editTweetIndex
+        editTweetIndex,
+        testUploadEdit,
+        setTweetWrapperEdit,
+        imageSelectedHandlerEdit,
+        handleDateChangeEdit,
+        tempImageRemoveEdit,
+        imageTempUrlEdit,
+		isButtonDisabledEdit,
+		setIsButtonDisabledEdit
 	}
 	= useButtonEditHandle({props,dateState,scheduledTweets,dialogstate,tweetState})
 
@@ -291,6 +300,17 @@ const handleNext = () => {
 // 	props.displayDate()
 // }
 
+
+var timezones=momentZones.tz.names()
+var guessedZone=momentZones.tz.guess(true)
+console.log(guessedZone)
+var dateToday=momentZones(new Date())
+console.log(dateToday.format("DD MM YY HH:mm"))
+var zn_details=momentZones().tz(guessedZone).format("ha z")
+console.log(zn_details)
+var losAngeles=dateToday.clone().tz("America/Los_Angeles").format("dd mm yy HH:mm")
+console.log(losAngeles)
+
 	useEffect(()=>{
 		// firebase.getRedirectCode()
 	// var result=	firebase.getUserData(uid)
@@ -298,8 +318,9 @@ const handleNext = () => {
 	// getScheduledPostData()
 	const getScheduledPostData=async ()=>{
 		var data=await firebase.getScheduledTweets(dialogstate.auth.user.uid).catch(err=>console.log(err))
-		props.setScheduledTweets(data)
 		console.log(data)
+		props.setScheduledTweets(data)
+		// console.log(data)
 		setLoading(false)
 			return
 		}
@@ -338,6 +359,7 @@ const handleNext = () => {
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
 						<Grid item lg={12} md={12} sm={12} xs={12}>
 					<Typography>Scheduled Tweets </Typography>
+				
 					<br />
 					</Grid>
 					{/* <DemoContent /> */}
@@ -411,7 +433,6 @@ const handleNext = () => {
 					/>
 					
 						</Box>
-					
 						<Box 
 						style={{
 						
@@ -473,6 +494,8 @@ const handleNext = () => {
 						width:"80%",
 						marginBottom:"10px"}}
 						/>
+							
+
 						</CardActionArea>
 						   	
 						</Box>:null}
@@ -596,23 +619,24 @@ const handleNext = () => {
 			 />
 			<EditTweetModal 
 			open={editOpen}
-			testUpload={testUpload}
+			testUpload={testUploadEdit}
 			editTweetIndex={editTweetIndex}
 			 handleClose={closeEditModal} 
-			 imageSelectedHandler={imageSelectedHandler} 
-			 imageTempUrl={imageTempUrl}
-			 tempImageRemove={tempImageRemove}
-			 isButtonDisabled={isButtonDisabled}
-			 setIsButtonDisabled={setIsButtonDisabled}
-			 setTweetWrapper={setTweetWrapper}
+			 imageSelectedHandler={imageSelectedHandlerEdit} 
+			 imageTempUrl={imageTempUrlEdit}
+			 tempImageRemove={tempImageRemoveEdit}
+			 isButtonDisabled={isButtonDisabledEdit}
+			 setIsButtonDisabled={setIsButtonDisabledEdit}
+			 setTweetWrapper={setTweetWrapperEdit}
+			 fetchGivenTweetEdit={props.fetchTweetEdit}
 
 
 			/>
 				</Grid>
 
-			
-
-				{scheduledTweets.map((value,index)=>
+		
+				
+				{scheduledTweets[0]==0 ? null:scheduledTweets.map((value,index)=>
 				<Grid item key={index} lg={10} md={10} sm={12} xs={12} 
 				style={{display:"flex",justifyContent:"center",marginTop:"15px"}}>
 
@@ -712,7 +736,7 @@ const handleNext = () => {
 				)}
 
 		
-		
+					
 			
 				</Grid>
 				
@@ -742,7 +766,20 @@ function mapDispatchToProps(dispatch) {
 			hideEditDate:customactions.hideEditDate,
 			handleDateChange:customactions.handleDateChange,
 			setScheduledTweets:customactions.setScheduledTweets,
-			removeUploadImage:customactions.removeUploadImage
+			removeUploadImage:customactions.removeUploadImage,
+			// below are actions for editModal to set state
+
+			setUploadEdit:customactions.setUploadEdit,
+			setStatusEdit:customactions.setStatusEdit,
+			addSubtweetEdit:customactions.addSubtweetEdit,
+			setTweetEdit:customactions.setTweetEdit,
+			setDownloadUrlEdit:customactions.setDownloadUrlEdit,
+			saveTweetEdit:customactions.setTweetEdit,
+			resetStateEdit:customactions.resetStateEdit,
+			handleDateChangeEdit:customactions.handleDateChangeEdit,
+			removeUploadImageEdit:customactions.removeUploadImageEdit,
+			removeSubTweetEdit:customactions.removeSubTweetEdit,
+			fetchTweetEdit:customactions.fetchTweetEdit,
 
 
 			// getAuthFunc:userActions.getAuthFunction

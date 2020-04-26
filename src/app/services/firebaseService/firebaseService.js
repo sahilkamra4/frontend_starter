@@ -298,6 +298,7 @@ class FirebaseService {
 			.then(snapshot => {
 				if (snapshot.empty) {
 				  console.log('No matching documents.');
+				  resolve([0])
 				  return;
 				}  
 			

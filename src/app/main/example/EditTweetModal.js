@@ -159,6 +159,11 @@ function TweetModal(props) {
 console.log(scheduledTweetState)
 console.log(props.editTweetIndex)
 console.log(scheduledTweetState[props.editTweetIndex])
+
+	
+
+
+
 	const uploadImage=()=>{
 		console.log("Uploading... file...")
 		inputFile.current.click()
@@ -230,8 +235,11 @@ console.log(scheduledTweetState[props.editTweetIndex])
 	}
 console.log(props.currentState.customReducers.upload.tweet)
 	useEffect(()=>{
-	
-	}	)
+
+		props.fetchGivenTweetEdit(scheduledTweetState[props.editTweetIndex])
+
+
+	},[])
 	return (
 		<main style={{overflowY:"scroll"}}>     
 		<Modal
@@ -278,7 +286,7 @@ console.log(props.currentState.customReducers.upload.tweet)
 		  >
 
 			
-		 {scheduledTweetState[props.editTweetIndex].tweet.map((value,index)=>
+		 {scheduledTweetState[0]==0 ? null:scheduledTweetState[props.editTweetIndex].tweet.map((value,index)=>
 	
 					<Card key={index}
 					 style={{
