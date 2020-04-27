@@ -13,6 +13,8 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
+import Box from '@material-ui/core/Box';
+
 
 const useStyles = makeStyles(theme=>({
 	content: {
@@ -26,8 +28,15 @@ const useStyles = makeStyles(theme=>({
 		backgroundAttachment: 'local, scroll'
 	},
 	title:{
-		display:"none"
+		display:"none",
 		
+		
+	},
+	normalTitle:{
+		display:"flex",
+		fontSize:"28px",
+		color:"#5fd0a5",
+		fontWeight:800
 	}
 
 
@@ -48,21 +57,64 @@ function NavbarLayout1(props) {
 				className="flex flex-row items-center flex-shrink h-64 min-h-64 px-12"
 				style={{backgroundColor:"#FFF"}}
 			>
-				<div className="flex flex-1 mx-8">
-					{/* <Logo /> */}
-				</div>
+			
 
 				<Hidden mdDown>
-					<Grid container alignItems="center">
-						<Grid item lg={8} md={8} sm={8} xs={8}>
+					<Grid container alignItems="center" style={{background:"",marginLeft:"0px",width:"100%"}}>
+					<Grid item lg={2} md={2} sm={2} xs={2} style={{background:""}}>
+					<img className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title))
+					)}
+						style={{marginLeft:""}}
+						src="assets/images/logos/premiumlogo (1)/logo_2.svg" alt="logo" />
+						</Grid>
+						<Grid item lg={4} md={4} sm={4} xs={4} >
+					
+						<Typography className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) ),
+						(
+							(!config.navbar.folded && classes.normalTitle)
+						&& (navbarStatus.foldedOpen && classes.normalTitle) )
+							)} style={{color:"black",
+							fontWeight:800,fontSize:"22px"}} >Publicity</Typography>
+							</Grid>
+							<Grid  item lg={5} md={5} sm={5} xs={5} style={{background:""}}>
+
+							<Typography className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) ),
+						(
+							(!config.navbar.folded && classes.normalTitle)
+						&& (navbarStatus.foldedOpen && classes.normalTitle) )
+					
+							)} style={{color:"#5fd0a5",
+							fontSize:"22px",
+							fontWeight:800,marginLeft:"8px"}}>Bandit</Typography>
+
+
+							</Grid>
+						
+						
+							{/* <Typography className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) )
+					
+							)} style={{}}> Publicity</Typography>
 						<Typography className={clsx(
 							(
 							(config.navbar.folded && classes.title)
 						&& (!navbarStatus.foldedOpen && classes.title) )
 					
-							)} style={{color:"black"}}>TweetKing</Typography>
-						</Grid>
-						<Grid item lg={3} md={3} sm={3} xs={3} style={{display:"flex",justifyContent:"flex-end"}}>
+							)} style={{display: 'inline-block',fontSize:"12px",fontWeight:800,color:"#55c3b7"}}> Bandit</Typography>
+						 */}
+						
+						<Grid item lg={1} md={1} sm={1} xs={1} style={{display:"flex",justifyContent:"flex-end",background:""}}>
 						<NavbarFoldedToggleButton className="w-40 h-40 p-0" />
 						</Grid>
 						
@@ -74,16 +126,48 @@ function NavbarLayout1(props) {
 						
 				<Hidden lgUp>
 				<Grid container alignItems="center">
-						<Grid item lg={8} md={8} sm={8} xs={8}>
+				<Grid item lg={2} md={2} sm={2} xs={2} style={{background:""}}>
+					<img className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title))
+					)}
+						style={{marginLeft:""}}
+						src="assets/images/logos/premiumlogo (1)/logo_2.svg" alt="logo" />
+						</Grid>
+						<Grid item lg={4} md={4} sm={4} xs={4} >
+					
 						<Typography className={clsx(
 							(
-								((config.navbar.folded && classes.title) && 
-								(!navbarStatus.mobileOpen && classes.title))
-								   )
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) ),
+						(
+							(!config.navbar.folded && classes.normalTitle)
+						&& (navbarStatus.foldedOpen && classes.normalTitle) )
+							)} style={{color:"black",
+							fontWeight:800,fontSize:"22px"}} >Publicity</Typography>
+							</Grid>
+							<Grid  item lg={5} md={5} sm={5} xs={5} style={{background:""}}>
+
+							<Typography className={clsx(
+							(
+							(config.navbar.folded && classes.title)
+						&& (!navbarStatus.foldedOpen && classes.title) ),
+						(
+							(!config.navbar.folded && classes.normalTitle)
+						&& (navbarStatus.foldedOpen && classes.normalTitle) )
 					
-							)} style={{color:"black"}}>TweetKing</Typography>
-						</Grid>
-						<Grid item lg={3} md={3} sm={3} xs={3} style={{display:"flex",justifyContent:"flex-end"}}>
+							)} style={{color:"#5fd0a5",
+							fontSize:"22px",
+							fontWeight:800,marginLeft:"8px"}}>Bandit</Typography>
+
+
+							</Grid>
+						
+						
+					
+					
+						<Grid item lg={1} md={1} sm={1} xs={1} style={{display:"flex",justifyContent:"flex-end"}}>
 					<NavbarMobileToggleButton className="w-40 h-40 p-0">
 						<Icon >{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}"</Icon>
 					</NavbarMobileToggleButton>

@@ -46,7 +46,9 @@ class FuseAuthorization extends Component {
 		const { location, userRole, history } = this.props;
 		const { pathname, state } = location;
 		const redirectUrl = state && state.redirectUrl ? state.redirectUrl : '/';
-
+		console.log(state)
+		console.log("redirect url is")
+		console.log(redirectUrl)
 		/*
         User is guest
         Redirect to Login Page
@@ -71,6 +73,10 @@ class FuseAuthorization extends Component {
 	render() {
 		console.log(this.props)
 		console.log(this.state)
+		console.log(this.props.userRole)
+		if(this.props.userRole[0]=='admin'){
+			this.props.history.push('/example')
+		}
 		// console.info('Fuse Authorization rendered', accessGranted);
 		return this.state.accessGranted ? <>{this.props.children}</> : null;
 	}

@@ -160,7 +160,7 @@ class FirebaseService {
 	}
 
 	getRedirectCode=()=>{
-	
+	return new Promise((resolve,reject)=>{
 		firebase.auth().getRedirectResult().then((result) => {
 			
 			// console.log(result)
@@ -173,6 +173,7 @@ class FirebaseService {
 			  console.log(secret)
 			  var user = result.user;
 			  console.log(user)
+			  console.log("user credential above")
 			  // ...
 			//   Create a user in your Firebase realtime database
 				this.user(user.uid).set(
@@ -190,6 +191,12 @@ class FirebaseService {
 					},
 					{ merge: true },
 				  );
+				  console.log("Credential saved in db")
+				  resolve("credentials saved in the database")
+			}
+			else{
+			resolve("no credentials found function just ran like that")
+
 			}
 			// The signed-in user info.
 		
@@ -198,6 +205,7 @@ class FirebaseService {
 			// Handle Errors here.
 			// console.log(error)
 			var errorCode = error.code;
+			console.log(error)
 			console.log(errorCode)
 			var errorMessage = error.message;
 			// The email of the user's account used.
@@ -205,6 +213,7 @@ class FirebaseService {
 			console.log(email)
 			// The firebase.auth.AuthCredential type that was used.
 			var credential = error.credential;
+			reject("Error occurred while fetching credentials")
 			// console.log(credential)
 		// /this.user("sahildecimustwitteruser").set(
 			// 	{
@@ -220,6 +229,7 @@ class FirebaseService {
 			// ...
 		  });
 		console.log("Redirect code function working")
+	})
 	}
 	getTwitterSignInUi=()=>{
 		// var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());

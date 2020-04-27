@@ -94,13 +94,18 @@ export function createUserSettingsFirebase(authUser) {
  * Set User Data
  */
 export function setUserData(user) {
+	console.log("reached set user data")
+	console.log(history)
 	return dispatch => {
 		/*
         You can redirect the logged-in user to a specific route depending on his role
          */
 
+		//  history.push('/example')
+
+		 //the below is used when logged in but page is roll access protected, send to correct url
 		// history.location.state = {
-		//     redirectUrl: user.redirectUrl // for example 'apps/academy'
+		//     redirectUrl: '/example' // for example 'apps/academy'
 		// }
 
 		/*

@@ -122,6 +122,7 @@ class Auth extends Component {
 					this.props.showMessage({ message: 'Logging in with Firebase auth service' });
 					console.log("auth exists")
 					console.log(authUser)
+					console.log(this.props)
 					// console.log(firebaseService.getCurrentUser())
 					// console.log(authUser.getIdToken())
 					// console.log(authUser.getAuthResponse().id_token)

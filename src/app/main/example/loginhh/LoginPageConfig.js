@@ -23,7 +23,8 @@ const LoginPageConfig = {
 			}
 		}
 	},
-	// auth:null,
+	auth:null,
+	// auth:[],
 	routes: [
 		{
 			path: '/login',

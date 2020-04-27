@@ -20,16 +20,16 @@ import * as userActions from 'app/auth/store/actions';
 import * as firebaseui from 'firebaseui'
 import firebase from 'app/services/firebaseService'
 import TwitterIcon from '@material-ui/icons/Twitter';
-
-
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import Box from '@material-ui/core/Box';
 // import {ui} from 'app/services/firebaseService/firebaseUi.js'
 const useStyles = makeStyles(theme => ({
 	root: {
-		background: `radial-gradient(${darken(theme.palette.primary.dark, 0.5)} 0%, ${theme.palette.primary.dark} 80%)`,
-		color: theme.palette.primary.contrastText
+		// background: `radial-gradient(${darken(theme.palette.primary.dark, 0.5)} 0%, ${theme.palette.primary.dark} 80%)`,
+		color: theme.palette.primary.contrastText,
+		// background:"#F7F7F7"
+		background:"#FFF"
 	}
 }));
 // const uiConfig = {
@@ -60,27 +60,56 @@ function LoginPage(props) {
 	}
 	useEffect(()=>{
 	
-			firebase.getRedirectCode()
+		const getRedirectCodeResult=async ()=>{
+		var result=await firebase.getRedirectCode().catch(err=>console.log(err))
+		console.log(result)
+		console.log("Redirect code finished working")
+		}
+		getRedirectCodeResult()
 		
 		
 	
-	}) 
+	},[]) 
 	
 	console.log(props)
 
 	return (
 		<div className={clsx(classes.root, 'flex flex-col flex-auto flex-shrink-0 items-center justify-center p-32')}>
-			<div className="flex flex-col items-center justify-center w-full">
-			
+
+	
+
+
+			<div className="flex flex-row items-center justify-center w-full" style={{background:""}}>
+				{/* <img className="w-128 m-32" src="assets/images/illustration-team-management-cartoon-flat/3998.jpg" /> */}
+				<Card className="w-3/4 " elevation={0} style={{background:"",marginLeft:""}}>
+				<CardContent className="flex justify-center" style={{background:"",}}>
+				<img className="" style={{height:"80vh",width:"100vh"}} src="assets/images/illustration-team-management-cartoon-flat/3998.jpg" />
+
+				</CardContent>
+				</Card>
+				
+				
 				<FuseAnimate animation="transition.expandIn">
-					<Card className="w-full max-w-384">
-					
+					<Card elevation={0} className="w-1/4 max-w-384" style={{background:"blue"}}>
+
 						<CardContent className="flex flex-col items-center justify-center p-32">
-							<img className="w-128 m-32" src="assets/images/logos/fuse.svg" alt="logo" />
+						<Box><Typography style={{fontSize:"28px",fontWeight:800,display: 'inline-block',marginRight:"5px"}}> Publicity</Typography>
+						<Typography style={{display: 'inline-block',fontSize:"28px",fontWeight:800,color:"#55c3b7"}}> Bandit</Typography></Box>	
+							<Typography  style={{fontSize:"18px",fontWeight:400,color:""}}>Signin Or Signup</Typography>
+							<img className="w-128 m-32" src="assets/images/logos/premiumlogo (1)/onlinelogomaker-042620-1851-3683.png" alt="logo" />
 
 						
 
-							<Button id="twitter-login" variant="contained" startIcon={<TwitterIcon/>} onClick={()=>firebase.signinRedirect()} color="primary" size="small" className="normal-case w-192">
+							<Button id="twitter-login" 
+							style={{
+								backgroundImage:"linear-gradient(90deg,#55c3b7 0,#5fd0a5 48%,#66da90 100%)"
+								// background:"#55acee"
+
+							}}
+							variant="contained" 
+							startIcon={<TwitterIcon/>} 
+							onClick={()=>firebase.signinRedirect()}
+							 color="primary" size="small" className="normal-case w-192">
 								Log in with Twitter
 							</Button>
 
