@@ -38,20 +38,24 @@ export function setUserDataAuth0(tokenData) {
  * Set user data from Firebase data
  */
 export function setUserDataFirebase(user, authUser) {
-	if (
-		user &&
-		user.data &&
-		user.data.settings &&
-		user.data.settings.theme &&
-		user.data.settings.layout &&
-		user.data.settings.layout.style
-	) {
-		// Set user data but do not update
-		return setUserData(user);
-	}
-
+	// if (
+	// 	// user &&
+	// 	// user.data &&
+	// 	// user.data.settings &&
+	// 	// user.data.settings.theme &&
+	// 	// user.data.settings.layout &&
+	// 	// user.data.settings.layout.style
+	// 	user.role
+	// ) {
+	// 	// Set user data but do not update
+	// 	return setUserData(user);
+	// }
+	console.log("Set data started")
+	user.uid=user.userId
 	// Create missing user settings
-	return createUserSettingsFirebase(authUser);
+	// return createUserSettingsFirebase(authUser);
+	return createUserSettingsFirebase(user);
+
 }
 
 /**
@@ -67,13 +71,19 @@ export function createUserSettingsFirebase(authUser) {
 		 * Merge with current Settings
 		 */
 		// console.log(guestUser)
+		// var set_role=authUser.isNewUser ? ['admin_new']:['admin']
+
+
 		const user = _.merge({}, {
 			uid: authUser.uid,
 			from: 'firebase',
-			role: ['admin'],
+			role: authUser.role,
 			data:{
-			displayName: authUser.providerData[0].displayName,
-			photoURL: authUser.providerData[0].photoURL,
+			displayName: authUser.displayName,
+			photoURL: authUser.photoURL,
+			isNewUser:authUser.isNewUser,
+			followers_count:authUser.followers_count,
+			friends_count:authUser.friends_count
 			// photoURL:"https://pbs.twimg.com/profile_images/1245958090249261056/XKnM5zuj.jpg"
 			}
 			
@@ -107,7 +117,19 @@ export function setUserData(user) {
 		// history.location.state = {
 		//     redirectUrl: '/example' // for example 'apps/academy'
 		// }
+		console.log(user.role)
+		console.log('location state set here')
+		console.log(user.role==['admin_new'])
+		if(user.role[0]=='admin_new'){
+			history.location.state = {
+		    redirectUrl: '/setup' // for example 'apps/academy'
+		}
 
+		}
+		console.log(history)
+		console.log(history.location.state)
+
+		console.log("Set data finished")
 		/*
         Set User Settings
          */

@@ -13,6 +13,8 @@ const initialState = {
 const user = (state = initialState, action) => {
 	switch (action.type) {
 		case Actions.SET_USER_DATA: {
+			console.log(action.payload)
+			console.log("Set data added to global state")
 			return {
 				...initialState,
 				...action.payload

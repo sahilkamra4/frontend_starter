@@ -11,7 +11,10 @@ import user from './store/reducers/user.reducer';
 
 class Auth extends Component {
 	state = {
-		waitAuthCheck: true
+		waitAuthCheck: true,
+		isNewUser:false,
+		friends_count:0,
+		followers_count:0
 	};
 	
 
@@ -24,7 +27,7 @@ class Auth extends Component {
 			// this.jwtCheck()
 		]).then((res) => {
 			console.log(res)
-			this.setState({ waitAuthCheck: false });
+			this.setState({ ...this.state,waitAuthCheck: false });
 		}).catch(err=>{console.log(err)});
 	}
 
@@ -115,14 +118,28 @@ class Auth extends Component {
 			});
 
 
-			firebaseService.getRedirectCode()
+			firebaseService.getRedirectCode().then(res=>{
+				console.log(res.isNewUser)
+				console.log(res.message)
+				if(res.isNewUser){
+					this.setState({...this.state,isNewUser:res.isNewUser,friends_count:res.friends_count,followers_count:res.followers_count})
+				}
+				console.log(this.state)
+
+			})
 
 			firebaseService.onAuthStateChanged(authUser => {
 				if (authUser) {
 					this.props.showMessage({ message: 'Logging in with Firebase auth service' });
 					console.log("auth exists")
 					console.log(authUser)
+					console.log("new user state is")
+					console.log(this.state.isNewUser)
+					
+					authUser.isNewUser=this.state.isNewUser
+					console.log(authUser.additionalUserInfo)
 					console.log(this.props)
+					console.log(authUser)
 					// console.log(firebaseService.getCurrentUser())
 					// console.log(authUser.getIdToken())
 					// console.log(authUser.getAuthResponse().id_token)
@@ -133,25 +150,37 @@ class Auth extends Component {
 					 * Retrieve user data from Firebase
 					 */
 					let user={}
-					this.props.setUserDataFirebase(authUser,authUser);
-					resolve();
+					console.log("Auth function is working")
+					// this.props.setUserDataFirebase(authUser,authUser);
+					// resolve();
 
 					this.props.showMessage({ message: 'Logged in with Firebase auth service' });
-					// firebaseService.getUserData(authUser.uid).then(
-					// 	user => {
-					// 		console.log(user)
-					// 		// this.props.setUserDataFirebase(user, authUser);
 
-					// 		resolve();
+				
 
-					// 		this.props.showMessage({ message: 'Logged in with Firebase' });
-					// 	},
-					// 	error => {
-					// 		resolve();
-					// 	}
-					// ).catch(err=>{
-					// 	console.log(err)
-					// 	console.log("Couldnt retrieve getUser Data")});
+					firebaseService.getUserData(authUser.uid).then(
+						user => {
+							console.log(user)
+							if(this.state.isNewUser){
+								user.isNewUser=this.state.isNewUser
+								user.friends_count=this.state.friends_count
+								user.followers_count=this.state.followers_count
+							}
+							this.props.setUserDataFirebase(user, authUser);
+							
+
+							resolve();
+
+							this.props.showMessage({ message: 'Logged in with Firebase' });
+						},
+						error => {
+							resolve();
+						}
+					).catch(err=>{
+						console.log(err)
+						console.log("Couldnt retrieve getUser Data")});
+
+						console.log("Get data finished")
 				}
 				 else {
 					console.log("no auth user")

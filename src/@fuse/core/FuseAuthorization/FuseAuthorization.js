@@ -36,8 +36,11 @@ class FuseAuthorization extends Component {
 		const { pathname } = location;
 
 		const matched = matchRoutes(state.routes, pathname)[0];
-
+		
+		console.log(FuseUtils.hasPermission(matched.route.auth, userRole))
+	
 		return {
+			
 			accessGranted: matched ? FuseUtils.hasPermission(matched.route.auth, userRole) : true
 		};
 	}

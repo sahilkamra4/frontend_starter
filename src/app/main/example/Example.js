@@ -358,7 +358,7 @@ console.log(losAngeles)
 					{loading ? <div>loading....</div>:
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
 						<Grid item lg={12} md={12} sm={12} xs={12}>
-					<Typography>Scheduled Tweets </Typography>
+					<Typography style={{fontSize:"28px",fontWeight:800}}>Scheduled Tweets </Typography>
 				
 					<br />
 					</Grid>

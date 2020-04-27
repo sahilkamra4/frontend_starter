@@ -117,10 +117,17 @@ const testUpload=async ()=>{
 	for(let i in tweetState.tweet){
 			tweetState.tweet[i].tweet_image=""
 		}
-	await firebase.saveTweet(tweetState,tweet_id).catch(err=>console.log(err))
-	props.resetState()
-	props.showMessage({message: 'Tweet Scheduled Successfully',autoHideDuration:2000,variant:"success"})
-	console.log("tweet saved")
+	var saveTweetResult=await firebase.saveTweet(tweetState,tweet_id).catch(err=>{
+        console.log(err)
+        props.showMessage({message: 'Unexpected Error Occured ',autoHideDuration:2000,variant:"error"})
+    })
+    console.log(saveTweetResult)
+    if(saveTweetResult){
+        props.resetState()
+        props.showMessage({message: 'Tweet Scheduled Successfully',autoHideDuration:2000,variant:"success"})
+        console.log("tweet saved")
+    }
+	
 }
 
 

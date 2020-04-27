@@ -5,6 +5,8 @@ import 'firebase/storage';
 import config from './firebaseServiceConfig';
 // var firebaseui = require('firebaseui')
 import * as firebaseui from 'firebaseui'
+var momentZones = require('moment-timezone');
+
 
 // import Firebase from '.';
 
@@ -54,7 +56,7 @@ class FirebaseService {
 
 	user = uid => this.db.doc(`users/${uid}`);
 	// users = () => this.db.collection('users');
-	tweet = tweetid =>this.db.doc(`scheduledTweets/${tweetid}`)
+	tweet = (tweetid,uid) =>this.db.collection(`users`).doc(`${uid}`).collection(`scheduledPosts`).doc(`${tweetid}`)
 	
 
 	getUserData = userId => {
@@ -117,6 +119,7 @@ class FirebaseService {
 	signinRedirect=()=>{
 		firebase.auth().signInWithRedirect(this.provider).then(res=>{
 			console.log(res)
+			console.log(res.additionalUserInfo)
 		})
 	}
 	signinPopup=()=>{
@@ -173,6 +176,12 @@ class FirebaseService {
 			  console.log(secret)
 			  var user = result.user;
 			  console.log(user)
+			  console.log(result.additionalUserInfo)
+			  var current_role=['admin']
+			  if(result.additionalUserInfo.isNewUser){
+				  current_role=['admin_new']
+			  }
+			  console.log(user.additionalUserInfo)
 			  console.log("user credential above")
 			  // ...
 			//   Create a user in your Firebase realtime database
@@ -186,13 +195,18 @@ class FirebaseService {
 					  "emailVerified":user.emailVerified,
 					  "token":result.credential.accessToken,
 					  "secret":result.credential.secret,
-					  "role":["admin"],
-					  "paymentStatus":"unpaid"
+					  "role":current_role,
+					  "paymentStatus":"unpaid",
+					  followers_count:result.additionalUserInfo.profile.followers_count,
+					  friends_count:result.additionalUserInfo.profile.friends_count
 					},
 					{ merge: true },
 				  );
 				  console.log("Credential saved in db")
-				  resolve("credentials saved in the database")
+				  resolve({"message":"credentials saved in database",
+				  followers_count:result.additionalUserInfo.profile.followers_count
+				  ,friends_count:result.additionalUserInfo.profile.friends_count
+				  ,isNewUser:result.additionalUserInfo.isNewUser})
 			}
 			else{
 			resolve("no credentials found function just ran like that")
@@ -295,8 +309,17 @@ class FirebaseService {
 		return new Promise((resolve,reject)=>{
 			console.log(data)
 			console.log(tweet_id)
-			this.tweet(data.tweet_id).set(data)
-			resolve("done")
+			this.tweet(data.tweet_id,data.user_id).set(data)
+			.then(res=>{
+				console.log(res)
+				console.log("error on line 302 line")
+				resolve("done")
+				
+			}).catch(err=>{
+				console.log(err)
+				reject("error is there in save tweet")
+			})
+		
 		})
 		
 	}
@@ -304,7 +327,7 @@ class FirebaseService {
 	getScheduledTweets=(user_id,tweet_id)=>{
 		var allScheduledTweets=[]
 		return new Promise((resolve,reject)=>{
-			this.db.collection('scheduledTweets').where('user_id','==',user_id).get()
+			this.db.collectionGroup('scheduledPosts').where('user_id','==',user_id).get()
 			.then(snapshot => {
 				if (snapshot.empty) {
 				  console.log('No matching documents.');

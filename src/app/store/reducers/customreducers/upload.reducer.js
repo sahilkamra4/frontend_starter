@@ -1,10 +1,15 @@
 import * as customActions from 'app/store/actions/customactions'
 import FirebaseService from 'app/services/firebaseService'
 import moment from 'moment'
+var momentZones = require('moment-timezone');
+
 
 // import { UPLOAD_IMAGE } from 'app/store/actions/customactions'
-var currentDateTime=moment(new Date())
-currentDateTime.add(30,'m')
+var currentDateTime=momentZones(new Date())
+console.log(currentDateTime.format("MMM DD, hh:mm a"))
+var utc_currentDate=currentDateTime.utc().format("MMM DD, hh:mm a")
+console.log(utc_currentDate)
+// currentDateTime.add(30,'m')
 var currentDateTimeDatabase=new Date()
 // console.log(FirebaseService.timestamp.fromDate(new Date()))
 // console.log(currentDateTimeDatabase)
