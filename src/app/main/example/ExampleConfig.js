@@ -18,7 +18,7 @@ const ExampleConfig = {
     auth: authRoles.admin,
 	routes: [
 		{
-			path: '/example',
+			path: '/dashboard',
 			component: Example
 		}
 	]

@@ -19,6 +19,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { useSelector } from 'react-redux';
 import firebase from 'app/services/firebaseService'
 import * as customactions from 'app/store/actions/customactions'
+import * as authactions from 'app/auth/store/actions/user.actions.js'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
@@ -44,7 +45,14 @@ import DoneIcon from '@material-ui/icons/Done';
 import CardMedia from '@material-ui/core/CardMedia';
 import { CardActionArea } from '@material-ui/core';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
-
+import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Popper from '@material-ui/core/Popper';
+import Paper from '@material-ui/core/Paper';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import List from '@material-ui/core/List';
 var momentZones = require('moment-timezone');
 
 
@@ -147,7 +155,23 @@ const useStyles = makeStyles(theme => ({
 	  buttonDisabled:{
 		color:"#FFF !important",
 		opacity:0.5
-	  }
+	  },
+	  cssLabel: {
+		color : 'green'
+	  },
+	
+	  cssOutlinedInput: {
+		'&$cssFocused $notchedOutline': {
+		  borderColor: `#5fd0a5 !important`,
+		}
+	  },
+	
+	  cssFocused: {},
+	
+	  notchedOutline: {
+		borderWidth: '1px',
+		borderColor: '#66da90 !important'
+	  },
 	  
 	  
 }));
@@ -191,6 +215,12 @@ function SetupPage(props) {
 	const dateState=useSelector(({customReducers})=>customReducers.displayDate.open)
 	const scheduledTweets=useSelector(({customReducers})=>customReducers.scheduledTweets)
 	const [loading,setLoading]=useState(true)
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [placement, setPlacement] = React.useState();
+	const [open, setOpen] = React.useState(false);
+	const [timeZoneList,setTimeZoneList]=useState([])
+	const [selectedZone,setSelectedZone]=useState('')
+	const [allTimeZones,setAllTimeZones]=useState([])
 	// const [imageTempUrl,setTempUrl]=useState("")
 	// const [isButtonDisabled,setIsButtonDisabled]=useState(true)
 	// const [editOpen,setEditOpen]=useState(false)
@@ -199,7 +229,17 @@ function SetupPage(props) {
 	// Rollbar.debug("loaded example")
 	// const rollbar=window.Rollbar
 	
-
+	const saveTimeZoneData= ()=>{
+		setLoading(true)
+		firebase.saveTimeZone({selectedZone:selectedZone,uid:dialogstate.auth.user.uid}).then(res=>{
+			props.updateRole(['admin'])
+			props.history.push('/dashboard')
+		}).catch(err=>{
+			console.log(err)
+			props.showMessage({variant:"error",message:"Unexpected Error Occured",autoHideDuration:2000})
+			setLoading(false)}
+		)
+	}
 
 
 
@@ -258,20 +298,52 @@ const handleNext = () => {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+const selectZone=(value)=>{
+	setSelectedZone(value)
+	setOpen(false)
+}
+
+//   console.log(timezones)
+  
+
+// var dateToday=momentZones(new Date())
+// console.log(dateToday.format("DD MM YY HH:mm"))
+// var zn_details=momentZones().tz(selectedZone).format("ha z")
+// console.log(zn_details)
+// var losAngeles=dateToday.clone().tz("America/Los_Angeles").format("dd mm yy HH:mm")
+// console.log(losAngeles)
+// console.log(timezones.length)
+
+console.log(timeZoneList)
+  const handleTimeZone=(newPlacement,event)=>{
+	  console.log(event.target.value)
+	  var val=event.target.value
+	 setSelectedZone(val)
+	  var newZone=[]
+	  if(val.length>0){
+		const regex=new RegExp(`^${event.target.value}`,'i')
+		 newZone=allTimeZones.filter(zone=>regex.test(zone))
+		setTimeZoneList(newZone)
+	  }
+	
+	if(newZone.length >0){
+		setOpen(true);
+	}
+	else{
+		setOpen(false)
+	}
+	
+	setAnchorEl(event.currentTarget);
+	
+	setPlacement(newPlacement);
+	
+}
 //   const displayEditDate=()=>{
 // 	props.displayDate()
 // }
 
 
-var timezones=momentZones.tz.names()
-var guessedZone=momentZones.tz.guess(true)
-console.log(guessedZone)
-var dateToday=momentZones(new Date())
-console.log(dateToday.format("DD MM YY HH:mm"))
-var zn_details=momentZones().tz(guessedZone).format("ha z")
-console.log(zn_details)
-var losAngeles=dateToday.clone().tz("America/Los_Angeles").format("dd mm yy HH:mm")
-console.log(losAngeles)
 
 	useEffect(()=>{
 		// firebase.getRedirectCode()
@@ -282,6 +354,10 @@ console.log(losAngeles)
 		var data=await firebase.getScheduledTweets(dialogstate.auth.user.uid).catch(err=>console.log(err))
 		console.log(data)
 		props.setScheduledTweets(data)
+		var guessedZone=momentZones.tz.guess(true)
+		var timezones=momentZones.tz.names()
+		setAllTimeZones(timezones)
+	setSelectedZone(guessedZone)
 		// console.log(data)
 		setLoading(false)
 			return
@@ -289,8 +365,9 @@ console.log(losAngeles)
 		getScheduledPostData()
 	// var data=await firebase.getScheduledTweets(dialogstate.auth.user.uid).catch(err=>console.log(err))
 	// props.setScheduledTweets(data)
-	
 
+	
+	
 	},[])
 	return (
 		<FusePageSimple
@@ -317,19 +394,99 @@ console.log(losAngeles)
 				minHeight:'91.9vh'
 		
 				}}>
-					{loading ? <div>loading....</div>:
+					{loading ? <div><LinearProgress style={{color:"green"}} /></div>:
 					<Grid container style={{justifyItems:"center",justifyContent:"center"}}>
 						<Grid item lg={12} md={12} sm={12} xs={12}>
-					<Typography style={{fontSize:"28px",fontWeight:800}}>Scheduled Tweets </Typography>
+		
 				
 					<br />
 					</Grid>
 				
 				
 				
-                    <Typography style={{fontSize:"28px",fontWeight:800}}>Welcome to Setup Page </Typography>
+                    <Typography style={{fontSize:"28px",fontWeight:800}}>Welcome to Publicity Bandit </Typography>
 					
-			
+						<Grid item lg={12} md={12} sm={12} xs={12} style={{display:"flex",justifyContent:"center",}}>
+						<Card className={classes.root} style={{width:"55%"}}>
+							<CardContent>
+								<Typography>
+
+								We have detected the given time zone for you
+
+								</Typography>
+
+								<Popper  open={open} anchorEl={anchorEl} placement={placement} transition>
+										{({ TransitionProps }) => (
+										<Fade {...TransitionProps} timeout={350}>
+											<Paper style={{overflowY:"scroll",height:"200px"}}>
+											<List>
+												{timeZoneList.map((value,index)=>
+													<ListItem onClick={()=>selectZone(value)} button key={index}>
+													<ListItemText primary={value} />
+													</ListItem>
+
+												)}
+											
+													</List>
+										
+											</Paper>
+										</Fade>
+										)}
+									</Popper>
+
+							<TextField 
+							 style={{width:"100%"}} id="outlined-basic" 
+							  variant="outlined" 
+							  onChange={(event)=>handleTimeZone("top",event)}
+							  value={selectedZone}
+							 InputLabelProps={{
+								classes: {
+								  root: classes.cssLabel,
+								  focused: classes.cssFocused,
+								},
+							  }}
+							  InputProps={{
+								classes: {
+								  root: classes.cssOutlinedInput,
+								  focused: classes.cssFocused,
+								  notchedOutline: classes.notchedOutline,
+								},
+								inputMode: "numeric"
+							  }}
+							 
+							 />
+							 <TextField 
+							 style={{width:"100%",marginTop:'15px'}} id="outlined-basic" 
+							  variant="outlined" 
+							 InputLabelProps={{
+								classes: {
+								  root: classes.cssLabel,
+								  focused: classes.cssFocused,
+								},
+							  }}
+							  InputProps={{
+								classes: {
+								  root: classes.cssOutlinedInput,
+								  focused: classes.cssFocused,
+								  notchedOutline: classes.notchedOutline,
+								},
+								inputMode: "numeric"
+							  }}
+							 
+							 />
+
+						
+
+							</CardContent>
+							<CardActions style={{justifyContent:"flex-end"}}>
+							<Button onClick={saveTimeZoneData} variant="contained" style={{backgroundImage:"linear-gradient(90deg,#55c3b7 0,#5fd0a5 48%,#66da90 100%)",}}>
+												<Typography style={{color:"#FFF"}}>Get Started</Typography>
+													</Button>
+							</CardActions>
+							</Card>
+
+
+						</Grid>
 				</Grid>
 				
 			}
@@ -373,7 +530,7 @@ function mapDispatchToProps(dispatch) {
 			removeSubTweetEdit:customactions.removeSubTweetEdit,
 			fetchTweetEdit:customactions.fetchTweetEdit,
 
-
+			updateRole:authactions.updateRole,
 			// getAuthFunc:userActions.getAuthFunction
 		},
 		dispatch

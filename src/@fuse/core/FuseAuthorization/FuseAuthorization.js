@@ -78,7 +78,7 @@ class FuseAuthorization extends Component {
 		console.log(this.state)
 		console.log(this.props.userRole)
 		if(this.props.userRole[0]=='admin'){
-			this.props.history.push('/example')
+			this.props.history.push('/dashboard')
 		}
 		// console.info('Fuse Authorization rendered', accessGranted);
 		return this.state.accessGranted ? <>{this.props.children}</> : null;

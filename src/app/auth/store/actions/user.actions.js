@@ -12,6 +12,7 @@ export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
 export const GET_FIREBASE_AUTH_FUNCTION='AUTH FUNCTION'
 export const GET_FIREBASE_AUTH_PROP='AUTH PROP'
+export const UPDATE_ROLE='UPDATE_ROLE'
 
 /**
  * Set user data from Auth0 token data
@@ -124,7 +125,11 @@ export function setUserData(user) {
 			history.location.state = {
 		    redirectUrl: '/setup' // for example 'apps/academy'
 		}
-
+		}
+		else if (user.role[0]=='admin'){
+			history.location.state = {
+				redirectUrl: '/dashboard' // for example 'apps/academy'
+			}
 		}
 		console.log(history)
 		console.log(history.location.state)
@@ -288,6 +293,15 @@ export function getAuthProp(){
 		dispatch({
 			type:GET_FIREBASE_AUTH_PROP,
 			payload:FirebaseService.getAuthProp()
+		})
+	}
+}
+
+export function updateRole(data){
+	return dispatch=>{
+		dispatch({
+			type:UPDATE_ROLE,
+			value:data
 		})
 	}
 }

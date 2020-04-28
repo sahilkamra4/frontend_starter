@@ -6,7 +6,21 @@ import config from './firebaseServiceConfig';
 // var firebaseui = require('firebaseui')
 import * as firebaseui from 'firebaseui'
 var momentZones = require('moment-timezone');
+function compare(a, b) {
+	// Use toUpperCase() to ignore character casing
+	const bandA = momentZones(a.post_time);
+	const bandB = momentZones(b.post_time);
+  
+	let comparison = 0;
 
+	if (bandA.isBefore(bandB)) {
+	  comparison = -1;
+	} else if (!bandA.isBefore(bandB)) {
+	  comparison = 1;
+	}
+	return comparison;
+  }
+  
 
 // import Firebase from '.';
 
@@ -198,7 +212,11 @@ class FirebaseService {
 					  "role":current_role,
 					  "paymentStatus":"unpaid",
 					  followers_count:result.additionalUserInfo.profile.followers_count,
-					  friends_count:result.additionalUserInfo.profile.friends_count
+					  friends_count:result.additionalUserInfo.profile.friends_count,
+					  timeZone:'',
+					  subscriberId:'',
+					  trialStartDate:''
+
 					},
 					{ merge: true },
 				  );
@@ -304,11 +322,26 @@ class FirebaseService {
 		return this.storageRef
 	}
 
+
+	saveTimeZone=(data)=>{
+		return new Promise((resolve,reject)=>{
+			console.log(data)
+			this.user(data.uid).update({
+				timeZone:data.selectedZone,
+				role:['admin']
+			})
+
+			resolve("data saved")
+		})
+	}
+
+
 	saveTweet=(data,tweet_id)=>{
 
 		return new Promise((resolve,reject)=>{
 			console.log(data)
 			console.log(tweet_id)
+			data.post_time=momentZones(data.post_time).utc().format()
 			this.tweet(data.tweet_id,data.user_id).set(data)
 			.then(res=>{
 				console.log(res)
@@ -340,6 +373,7 @@ class FirebaseService {
 				
 				  allScheduledTweets.push(doc.data())
 				});
+				allScheduledTweets.sort(compare)
 				resolve(allScheduledTweets)
 			  })
 			  .catch(err => {
@@ -351,6 +385,7 @@ class FirebaseService {
 	}
 
 }
+
 
 
 

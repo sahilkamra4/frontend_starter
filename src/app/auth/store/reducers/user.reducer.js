@@ -40,6 +40,16 @@ const user = (state = initialState, action) => {
 				...action.payload
 			}
 		}
+		case Actions.UPDATE_ROLE:{
+			var newState={...state}
+			console.log(newState)
+			newState.role=action.value
+			return{
+			
+				...newState
+				
+			}
+		}
 		default: {
 			return state;
 		}

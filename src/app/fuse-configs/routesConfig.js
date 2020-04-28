@@ -12,10 +12,10 @@ const routes = [
 	{
 		path: '/',
 		
-		component: () => <Redirect to="/example" />
+		component: () => <Redirect to="/dashboard" />
 	},
 	{
-		path: '/example',
+		path: '/dashboard',
 		
 		component: () => <Redirect to="/setup" />
 	}
