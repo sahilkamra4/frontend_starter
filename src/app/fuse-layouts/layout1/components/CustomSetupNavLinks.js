@@ -35,6 +35,9 @@ function ToolbarLayout1(props) {
 	const handleSetupStripe = () => {
 		props.history.push('/setup/stripe');
 	};
+	const handleCodeIntegration = () => {
+		props.history.push('/dashboard');
+	};
 
 	const classes = useStyles(props);
 	console.log(props);
@@ -86,7 +89,7 @@ function ToolbarLayout1(props) {
 										justifyContent: 'center'
 									}}
 								>
-									Code Integration
+									<Link onClick={handleCodeIntegration}> Code Integration Links to dashboard</Link>
 								</div>
 								<div
 									style={{

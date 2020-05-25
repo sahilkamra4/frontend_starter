@@ -78,10 +78,24 @@ class FuseAuthorization extends Component {
 	render() {
 		console.log(this.props);
 		console.log(this.state);
-		console.log(this.props.userRole);
-		if (this.props.userRole[0] == 'admin') {
-			this.props.history.push('/dashboard');
+		// console.log(this.props.userRole);
+		// if (this.props.userRole[0] == 'admin') {
+		// 	this.props.history.push('/dashboard');
+		// }
+		// console.log(this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/login');
+		// console.log(this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/');
+		// console.log(
+		// 	(this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/') ||
+		// 		(this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/login')
+		// );
+		if (this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/login') {
+			console.log('should push setup stripe');
+			this.props.history.push('/setup/stripe');
 		}
+		console.log(this.props.location.pathname);
+		// if (this.props.userRole[0] == 'admin_new' && this.props.location.pathname == '/') {
+		// 	this.props.history.push('/setup/stripe');
+		// }
 		// console.info('Fuse Authorization rendered', accessGranted);
 		return this.state.accessGranted ? <>{this.props.children}</> : null;
 	}

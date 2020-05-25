@@ -12,19 +12,19 @@ const routes = [
 	...FuseUtils.generateRoutesFromConfigs(routeConfigs),
 	{
 		path: '/',
+		auth: ['admin_new'],
+		component: () => <Redirect to="/setup/stripe" />
+	},
+	{
+		path: '/dashboard',
+		auth: ['admin_new'],
+		component: () => <Redirect to="/setup/stripe" />
+	},
+	{
+		path: '/',
 
-		component: () => <Redirect to="/dashboard" />
+		component: () => <Redirect to="/login" />
 	}
-	// {
-	// 	path: '/dashboard',
-
-	// 	component: () => <Redirect to="/setup/stripe" />
-	// }
-	// {
-	// 	path: '/login',
-	// 	auth:['admin'],
-	// 	component: () => <Redirect to="/example" />
-	// }
 ];
 
 export default routes;
