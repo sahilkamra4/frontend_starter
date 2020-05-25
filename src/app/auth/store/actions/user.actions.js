@@ -10,9 +10,9 @@ import FirebaseService from 'app/services/firebaseService';
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
-export const GET_FIREBASE_AUTH_FUNCTION='AUTH FUNCTION'
-export const GET_FIREBASE_AUTH_PROP='AUTH PROP'
-export const UPDATE_ROLE='UPDATE_ROLE'
+export const GET_FIREBASE_AUTH_FUNCTION = 'AUTH FUNCTION';
+export const GET_FIREBASE_AUTH_PROP = 'AUTH PROP';
+export const UPDATE_ROLE = 'UPDATE_ROLE';
 
 /**
  * Set user data from Auth0 token data
@@ -51,12 +51,11 @@ export function setUserDataFirebase(user, authUser) {
 	// 	// Set user data but do not update
 	// 	return setUserData(user);
 	// }
-	console.log("Set data started")
-	user.uid=user.userId
+	console.log('Set data started');
+	user.uid = user.userId;
 	// Create missing user settings
 	// return createUserSettingsFirebase(authUser);
 	return createUserSettingsFirebase(user);
-
 }
 
 /**
@@ -74,26 +73,28 @@ export function createUserSettingsFirebase(authUser) {
 		// console.log(guestUser)
 		// var set_role=authUser.isNewUser ? ['admin_new']:['admin']
 
+		const user = _.merge(
+			{},
+			{
+				uid: authUser.uid,
+				from: 'firebase',
+				role: authUser.role,
+				data: {
+					displayName: authUser.displayName,
+					photoURL: authUser.photoURL,
+					isNewUser: authUser.isNewUser,
+					followers_count: authUser.followers_count,
+					friends_count: authUser.friends_count
+					// photoURL:"https://pbs.twimg.com/profile_images/1245958090249261056/XKnM5zuj.jpg"
+				}
 
-		const user = _.merge({}, {
-			uid: authUser.uid,
-			from: 'firebase',
-			role: authUser.role,
-			data:{
-			displayName: authUser.displayName,
-			photoURL: authUser.photoURL,
-			isNewUser:authUser.isNewUser,
-			followers_count:authUser.followers_count,
-			friends_count:authUser.friends_count
-			// photoURL:"https://pbs.twimg.com/profile_images/1245958090249261056/XKnM5zuj.jpg"
+				// data: {
+				// 	displayName: authUser.displayName,
+				// 	email: authUser.email,
+				// 	settings: { ...fuseDefaultSettings }
+				// }
 			}
-			
-			// data: {
-			// 	displayName: authUser.displayName,
-			// 	email: authUser.email,
-			// 	settings: { ...fuseDefaultSettings }
-			// }
-		});
+		);
 		// currentUser.updateProfile(user.data);
 
 		// updateUserData(user, dispatch);
@@ -105,8 +106,8 @@ export function createUserSettingsFirebase(authUser) {
  * Set User Data
  */
 export function setUserData(user) {
-	console.log("reached set user data")
-	console.log(history)
+	console.log('reached set user data');
+	console.log(history);
 	return dispatch => {
 		/*
         You can redirect the logged-in user to a specific route depending on his role
@@ -114,27 +115,27 @@ export function setUserData(user) {
 
 		//  history.push('/example')
 
-		 //the below is used when logged in but page is roll access protected, send to correct url
+		//the below is used when logged in but page is roll access protected, send to correct url
 		// history.location.state = {
 		//     redirectUrl: '/example' // for example 'apps/academy'
 		// }
-		console.log(user.role)
-		console.log('location state set here')
-		console.log(user.role==['admin_new'])
-		if(user.role[0]=='admin_new'){
+		console.log(user.role);
+		console.log('location state set here');
+		console.log(user.role == ['admin_new']);
+		user.role = ['admin_new'];
+		if (user.role[0] == 'admin_new') {
 			history.location.state = {
-		    redirectUrl: '/setup' // for example 'apps/academy'
-		}
-		}
-		else if (user.role[0]=='admin'){
+				redirectUrl: '/setup/stripe' // for example 'apps/academy'
+			};
+		} else if (user.role[0] == 'admin') {
 			history.location.state = {
 				redirectUrl: '/dashboard' // for example 'apps/academy'
-			}
+			};
 		}
-		console.log(history)
-		console.log(history.location.state)
+		console.log(history);
+		console.log(history.location.state);
 
-		console.log("Set data finished")
+		console.log('Set data finished');
 		/*
         Set User Settings
          */
@@ -243,13 +244,13 @@ function updateUserData(user, dispatch) {
 	switch (user.from) {
 		case 'firebase': {
 			// firebaseService
-				// .updateUserData(user)
-				// .then(() => {
-				// 	dispatch(MessageActions.showMessage({ message: 'User data saved to firebase' }));
-				// })
-				// .catch(error => {
-				// 	dispatch(MessageActions.showMessage({ message: error.message }));
-				// });
+			// .updateUserData(user)
+			// .then(() => {
+			// 	dispatch(MessageActions.showMessage({ message: 'User data saved to firebase' }));
+			// })
+			// .catch(error => {
+			// 	dispatch(MessageActions.showMessage({ message: error.message }));
+			// });
 			break;
 		}
 		case 'auth0': {
@@ -280,28 +281,28 @@ function updateUserData(user, dispatch) {
 	}
 }
 
-export function getAuthFunction(){
-	return dispatch=>{
+export function getAuthFunction() {
+	return dispatch => {
 		dispatch({
-			type:GET_FIREBASE_AUTH_FUNCTION,
-			payload:FirebaseService.getAuthFunction()
-		})
-	}
+			type: GET_FIREBASE_AUTH_FUNCTION,
+			payload: FirebaseService.getAuthFunction()
+		});
+	};
 }
-export function getAuthProp(){
-	return dispatch=>{
+export function getAuthProp() {
+	return dispatch => {
 		dispatch({
-			type:GET_FIREBASE_AUTH_PROP,
-			payload:FirebaseService.getAuthProp()
-		})
-	}
+			type: GET_FIREBASE_AUTH_PROP,
+			payload: FirebaseService.getAuthProp()
+		});
+	};
 }
 
-export function updateRole(data){
-	return dispatch=>{
+export function updateRole(data) {
+	return dispatch => {
 		dispatch({
-			type:UPDATE_ROLE,
-			value:data
-		})
-	}
+			type: UPDATE_ROLE,
+			value: data
+		});
+	};
 }

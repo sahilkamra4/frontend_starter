@@ -419,14 +419,7 @@ function SetupPage(props) {
 							>
 								<Card className={classes.root} style={{ width: '55%' }}>
 									<CardContent>
-										<Typography>Please connect your stripe account</Typography>
-										<Typography>{stripeErrorMsg ? stripeErrorMsg : null}</Typography>
-										<button
-											className="stripeButton"
-											onClick={handleStripe}
-											style={{ width: '200px', height: '60px' }}
-											id="submit"
-										></button>
+										<Typography>Create your first campaign</Typography>
 
 										{/* <TextField 
 							 style={{width:"100%"}} id="outlined-basic" 

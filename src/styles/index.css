@@ -148,6 +148,37 @@ input:-webkit-autofill {
     -webkit-box-shadow:0 0 0 100px transparent inset!important;
 }
 
+.stripeButton{
+    --gray-offset: rgba(0, 0, 0, 0.03);
+--gray-border: rgba(0, 0, 0, 0.15);
+--gray-light: rgba(0, 0, 0, 0.4);
+--gray-mid: rgba(0, 0, 0, 0.7);
+--gray-dark: rgba(0, 0, 0, 0.9);
+--body-color: var(--gray-mid);
+--headline-color: var(--gray-dark);
+--accent-color: #0066f0;
+--body-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+--radius: 6px;
+--form-width: 343px;
+--button-image: url("./blue-on-dark.png");
+-webkit-font-smoothing: antialiased;
+box-sizing: border-box;
+font-family: inherit;
+font-size: 100%;
+line-height: 1.15;
+margin: 0;
+overflow: visible;
+text-transform: none;
+-webkit-appearance: button;
+cursor: pointer;
+display: block;
+background-image: var(--button-image);
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+border-width: 0;
+height: 33px;
+}
 @import 'print.css';
 
 @import 'tables.css';

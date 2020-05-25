@@ -34,13 +34,15 @@ class FuseAuthorization extends Component {
 	static getDerivedStateFromProps(props, state) {
 		const { location, userRole } = props;
 		const { pathname } = location;
-
+		console.log('user role is ' + userRole);
+		console.log('location is ' + location);
+		console.log(location);
+		// console.log(matched.route.auth);
 		const matched = matchRoutes(state.routes, pathname)[0];
-		
-		console.log(FuseUtils.hasPermission(matched.route.auth, userRole))
-	
+
+		console.log(FuseUtils.hasPermission(matched.route.auth, userRole));
+
 		return {
-			
 			accessGranted: matched ? FuseUtils.hasPermission(matched.route.auth, userRole) : true
 		};
 	}
@@ -49,9 +51,9 @@ class FuseAuthorization extends Component {
 		const { location, userRole, history } = this.props;
 		const { pathname, state } = location;
 		const redirectUrl = state && state.redirectUrl ? state.redirectUrl : '/';
-		console.log(state)
-		console.log("redirect url is")
-		console.log(redirectUrl)
+		console.log(state);
+		console.log('redirect url is');
+		console.log(redirectUrl);
 		/*
         User is guest
         Redirect to Login Page
@@ -74,11 +76,11 @@ class FuseAuthorization extends Component {
 	}
 
 	render() {
-		console.log(this.props)
-		console.log(this.state)
-		console.log(this.props.userRole)
-		if(this.props.userRole[0]=='admin'){
-			this.props.history.push('/dashboard')
+		console.log(this.props);
+		console.log(this.state);
+		console.log(this.props.userRole);
+		if (this.props.userRole[0] == 'admin') {
+			this.props.history.push('/dashboard');
 		}
 		// console.info('Fuse Authorization rendered', accessGranted);
 		return this.state.accessGranted ? <>{this.props.children}</> : null;

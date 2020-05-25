@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import Setup from './Setup';
+import SetupCampaign from './SetupCampaign';
 // import en from './i18n/en';
 // import tr from './i18n/tr';
 // import ar from './i18n/ar';
@@ -25,8 +25,8 @@ const SetupConfig = {
 	auth: authRoles.admin_new,
 	routes: [
 		{
-			path: '/setup/stripe',
-			component: Setup
+			path: '/setup/campaign',
+			component: SetupCampaign
 		}
 	]
 };

@@ -14,7 +14,7 @@ import LeftSideLayout1 from './components/LeftSideLayout1';
 import NavbarWrapperLayout1 from './components/NavbarWrapperLayout1';
 import RightSideLayout1 from './components/RightSideLayout1';
 import ToolbarLayout1 from './components/ToolbarLayout1';
-
+import CustomSetupNavLinks from './components/CustomSetupNavLinks';
 const useStyles = makeStyles(theme => ({
 	root: {
 		position: 'relative',
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 		height: '100vh',
 		overflow: 'hidden',
 		backgroundColor: theme.palette.background.default,
-	
+
 		color: theme.palette.text.primary,
 		'&.boxed': {
 			maxWidth: 1280,
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 		overflow: 'auto',
 		flex: '1 1 auto',
 		flexDirection: 'column',
-		
+
 		width: '100%',
 		'-webkit-overflow-scrolling': 'touch',
 		zIndex: 2
@@ -94,10 +94,10 @@ function Layout1(props) {
 	switch (config.scroll) {
 		case 'body': {
 			return (
-				<div id="fuse-layout" className={clsx(classes.root, config.mode, `scroll-${config.scroll}`)} >
+				<div id="fuse-layout" className={clsx(classes.root, config.mode, `scroll-${config.scroll}`)}>
 					{config.leftSidePanel.display && <LeftSideLayout1 />}
 
-					<div className="flex flex-1 flex-col overflow-hidden relative" >
+					<div className="flex flex-1 flex-col overflow-hidden relative">
 						{config.toolbar.display &&
 							config.toolbar.style === 'fixed' &&
 							config.toolbar.position === 'above' && <ToolbarLayout1 />}
@@ -167,10 +167,17 @@ function Layout1(props) {
 									config.toolbar.position === 'below' &&
 									config.toolbar.style === 'fixed' && <ToolbarLayout1 />}
 
+								{config.toolbar.display &&
+									config.toolbar.position === 'below' &&
+									config.toolbar.style === 'fixed' && <CustomSetupNavLinks />}
+
 								<FuseScrollbars className={classes.content} scrollToTopOnRouteChange>
 									{config.toolbar.display &&
 										config.toolbar.position === 'below' &&
 										config.toolbar.style !== 'fixed' && <ToolbarLayout1 />}
+									{config.toolbar.display &&
+										config.toolbar.position === 'below' &&
+										config.toolbar.style !== 'fixed' && <CustomSetupNavLinks />}
 
 									<FuseDialog />
 
@@ -187,7 +194,7 @@ function Layout1(props) {
 									config.footer.position === 'below' &&
 									config.footer.style === 'fixed' && <FooterLayout1 />}
 
-								<SettingsPanel />
+								{/* <SettingsPanel /> */}
 							</div>
 
 							{config.navbar.display && config.navbar.position === 'right' && <NavbarWrapperLayout1 />}
