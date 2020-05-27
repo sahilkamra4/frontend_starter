@@ -122,7 +122,7 @@ export function setUserData(user) {
 		console.log(user.role);
 		console.log('location state set here');
 		console.log(user.role == ['admin_new']);
-		user.role = ['admin_new'];
+		user.role = ['admin'];
 		if (user.role[0] == 'admin_new') {
 			history.location.state = {
 				redirectUrl: '/setup/stripe' // for example 'apps/academy'

@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import SetupCampaign from './SetupCampaign';
+import Campaigns from './Campaigns';
 // import en from './i18n/en';
 // import tr from './i18n/tr';
 // import ar from './i18n/ar';
@@ -14,7 +14,7 @@ const SetupConfig = {
 		layout: {
 			config: {
 				navbar: {
-					display: false
+					display: true
 				}
 				// toolbar: {
 				// 	display: true
@@ -25,8 +25,8 @@ const SetupConfig = {
 	auth: authRoles.admin,
 	routes: [
 		{
-			path: '/setup/campaign',
-			component: SetupCampaign
+			path: '/campaigns/overview',
+			component: Campaigns
 		}
 	]
 };

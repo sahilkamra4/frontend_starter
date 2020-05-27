@@ -22,7 +22,7 @@ const SetupConfig = {
 			}
 		}
 	},
-	auth: authRoles.admin_new,
+	auth: authRoles.admin,
 	routes: [
 		{
 			path: '/setup/stripe',

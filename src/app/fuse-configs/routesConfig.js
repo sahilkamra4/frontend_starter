@@ -5,8 +5,19 @@ import ExampleConfig from 'app/main/example/ExampleConfig';
 import LoginConfig from 'app/main/example/loginhh/LoginPageConfig.js';
 import SetupConfig from 'app/main/example/SetupPage/SetupConfig';
 import SetupCampaignConfig from 'app/main/example/SetupPage/SetupCampaignConfig';
+import CampaignsConfig from 'app/main/example/CampaignsPage/CampaignsConfig.js';
+import CampaignDetailsConfig from 'app/main/example/CampaignsPage/CampaignDetailsConfig.js';
+import CampaignsEditConfig from 'app/main/example/CampaignsPage/CampaignsEditConfig.js';
 
-const routeConfigs = [ExampleConfig, LoginConfig, SetupConfig, SetupCampaignConfig];
+const routeConfigs = [
+	ExampleConfig,
+	LoginConfig,
+	SetupConfig,
+	SetupCampaignConfig,
+	CampaignsConfig,
+	CampaignDetailsConfig,
+	CampaignsEditConfig
+];
 
 const routes = [
 	...FuseUtils.generateRoutesFromConfigs(routeConfigs),
